@@ -34,4 +34,5 @@ fn main() {
         positions: ve.reshape_to_matrix(2, 3),
     };
     println!("Vector reshape to matrix {reshaped_matrix}");
+    println!("--------------------------------------------");
 }

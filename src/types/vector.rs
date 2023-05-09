@@ -42,4 +42,30 @@ impl<
         }
         matrix
     }
+
+    fn is_same_size(&self, v: &Vector<K>) {
+        if self.positions.len() != v.positions.len() {
+            panic!("Can't add two Vectors of different sizes");
+        }
+    }
+
+    pub fn add(&mut self, v: &Vector<K>) {
+        self.is_same_size(v);
+        for (index, points) in v.positions.iter().enumerate() {
+            self.positions[index] = self.positions[index] + points.clone();
+        }
+    }
+
+    pub fn sub(&mut self, v: &Vector<K>) {
+        self.is_same_size(v);
+        for (index, points) in v.positions.iter().enumerate() {
+            self.positions[index] = self.positions[index] - points.clone();
+        }
+    }
+
+    pub fn scl(&mut self, a: K) {
+        for point in self.positions.iter_mut() {
+            *point = *point * a;
+        }
+    }
 }

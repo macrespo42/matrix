@@ -30,6 +30,45 @@ impl<
         }
         returned_vector
     }
+
+    fn same_size(&self, v: &Matrix<K>) {
+        if self.positions.len() != v.positions.len() {
+            panic!("Matrix do not have same size!");
+        }
+        for (index, point) in self.positions.iter().enumerate() {
+            if point.len() != v.positions[index].len() {
+                panic!("Matrix rows do not have same size!");
+            }
+        }
+    }
+
+    pub fn add(&mut self, v: &Matrix<K>) {
+        self.same_size(v);
+        for (row_index, row) in v.positions.iter().enumerate() {
+            for (col_index, column) in row.iter().enumerate() {
+                self.positions[row_index][col_index] =
+                    self.positions[row_index][col_index] + column.clone();
+            }
+        }
+    }
+
+    fn sub(&mut self, v: &Matrix<K>) {
+        self.same_size(v);
+        for (row_index, row) in v.positions.iter().enumerate() {
+            for (col_index, column) in row.iter().enumerate() {
+                self.positions[row_index][col_index] =
+                    self.positions[row_index][col_index] - column.clone();
+            }
+        }
+    }
+
+    fn scl(&mut self, a: K) {
+        for row in self.positions.iter_mut() {
+            for column in row.iter_mut() {
+                *column = *column * a;
+            }
+        }
+    }
 }
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
