@@ -17,8 +17,29 @@ impl<K: fmt::Display> fmt::Display for Vector<K> {
     }
 }
 
-impl<K> Vector<K> {
+impl<
+        K: Copy + std::ops::Add<Output = K> + std::ops::Sub<Output = K> + std::ops::Mul<Output = K>,
+    > Vector<K>
+{
     pub fn size(&self) -> usize {
         self.positions.len()
+    }
+
+    pub fn reshape_to_matrix(&self, col_size: usize, row_size: usize) -> Vec<Vec<K>> {
+        let mut matrix: Vec<Vec<K>> = Vec::new();
+
+        let mut row_inserted = 0;
+        let mut start_slice: usize = 0;
+        let mut end_slice: usize = col_size;
+
+        while row_inserted < row_size {
+            let mut row: Vec<K> = Vec::new();
+            row.extend_from_slice(&self.positions[start_slice..end_slice]);
+            start_slice += col_size;
+            end_slice += col_size;
+            row_inserted += 1;
+            matrix.push(row);
+        }
+        matrix
     }
 }

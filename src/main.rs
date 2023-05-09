@@ -2,7 +2,7 @@ mod types;
 use crate::types::{Matrix, Vector};
 
 fn main() {
-    let vec1 = vec![1.0, 2.0, 3.0];
+    let vec1 = vec![1., 2., 3., 4., 5., 6.];
     let mut my_vec: Vec<Vec<f32>> = Vec::new();
 
     for _i in 0..3 {
@@ -24,4 +24,14 @@ fn main() {
     } else {
         println!("matrix is not square");
     }
+
+    let reshaped_vec = Vector::<f32> {
+        positions: ma.reshape_to_vector(),
+    };
+    println!("Matrix reshaped to vector : {reshaped_vec}");
+
+    let reshaped_matrix = Matrix::<f32> {
+        positions: ve.reshape_to_matrix(2, 3),
+    };
+    println!("Vector reshape to matrix {reshaped_matrix}");
 }
