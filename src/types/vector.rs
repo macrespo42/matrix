@@ -43,6 +43,12 @@ impl<
         matrix
     }
 
+    pub fn from(vec: &[K]) -> Self {
+        Vector {
+            positions: vec.to_vec(),
+        }
+    }
+
     fn is_same_size(&self, v: &Vector<K>) {
         if self.positions.len() != v.positions.len() {
             panic!("Can't add two Vectors of different sizes");

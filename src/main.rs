@@ -2,37 +2,38 @@ mod types;
 use crate::types::{Matrix, Vector};
 
 fn main() {
-    let vec1 = vec![1., 2., 3., 4., 5., 6.];
-    let mut my_vec: Vec<Vec<f32>> = Vec::new();
-
-    for _i in 0..3 {
-        let row_vec = vec![2.; 2];
-        my_vec.push(row_vec);
-    }
-    let ma = Matrix::<f32> { positions: my_vec };
-    let ve = Vector::<f32> { positions: vec1 };
-
-    println!("Size of vector : {}", ve.size());
-    println!("vector: {ve}");
-
-    println!("--------------------");
-
-    println!("Size of matrix: {} : {}", ma.shape().0, ma.shape().1);
-    println!("matrix: \n{}", ma);
-    if ma.is_square() {
-        println!("matrix is square");
-    } else {
-        println!("matrix is not square");
-    }
-
-    let reshaped_vec = Vector::<f32> {
-        positions: ma.reshape_to_vector(),
-    };
-    println!("Matrix reshaped to vector : {reshaped_vec}");
-
-    let reshaped_matrix = Matrix::<f32> {
-        positions: ve.reshape_to_matrix(2, 3),
-    };
-    println!("Vector reshape to matrix {reshaped_matrix}");
-    println!("--------------------------------------------");
+    let mut u = Vector::from(&[2., 3.]);
+    let v = Vector::from(&[5., 7.]);
+    u.add(&v);
+    println!("{}", u);
+    // [7.0]
+    // [10.0]
+    let mut u = Vector::from(&[2., 3.]);
+    let v = Vector::from(&[5., 7.]);
+    u.sub(&v);
+    println!("{}", u);
+    // [-3.0]
+    // [-4.0]
+    let mut u = Vector::from(&[2., 3.]);
+    u.scl(2.);
+    println!("{}", u);
+    // [4.0]
+    // [6.0]
+    let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+    let v = Matrix::from(&[&[7., 4.], &[-2., 2.]]);
+    u.add(&v);
+    println!("{}", u);
+    // [8.0, 6.0]
+    // [1.0, 6.0]
+    let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+    let v = Matrix::from(&[&[7., 4.], &[-2., 2.]]);
+    u.sub(&v);
+    println!("{}", u);
+    // [-6.0, -2.0]
+    // [5.0, 2.0]
+    let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+    u.scl(2.);
+    println!("{}", u);
+    // [2.0, 4.0]
+    // [6.0, 8.0]
 }

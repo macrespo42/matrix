@@ -31,6 +31,14 @@ impl<
         returned_vector
     }
 
+    pub fn from(matrix: &[&[K]]) -> Self {
+        let mut positions = Vec::with_capacity(matrix.len());
+        for row in matrix {
+            positions.push(row.to_vec());
+        }
+        Matrix { positions }
+    }
+
     fn same_size(&self, v: &Matrix<K>) {
         if self.positions.len() != v.positions.len() {
             panic!("Matrix do not have same size!");
@@ -52,7 +60,7 @@ impl<
         }
     }
 
-    fn sub(&mut self, v: &Matrix<K>) {
+    pub fn sub(&mut self, v: &Matrix<K>) {
         self.same_size(v);
         for (row_index, row) in v.positions.iter().enumerate() {
             for (col_index, column) in row.iter().enumerate() {
@@ -62,7 +70,7 @@ impl<
         }
     }
 
-    fn scl(&mut self, a: K) {
+    pub fn scl(&mut self, a: K) {
         for row in self.positions.iter_mut() {
             for column in row.iter_mut() {
                 *column = *column * a;
