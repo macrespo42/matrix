@@ -75,3 +75,34 @@ impl<
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn vector_add() {
+        let mut u = Vector::from(&[2., 3.]);
+        let v = Vector::from(&[5., 7.]);
+        u.add(&v);
+        assert_eq!(7.0, u.positions[0]);
+        assert_eq!(10.0, u.positions[1]);
+    }
+
+    #[test]
+    fn vector_sub() {
+        let mut u = Vector::from(&[2., 3.]);
+        let v = Vector::from(&[5., 7.]);
+        u.sub(&v);
+        assert_eq!(-3.0, u.positions[0]);
+        assert_eq!(-4.0, u.positions[1]);
+    }
+
+    #[test]
+    fn vector_scale() {
+        let mut u = Vector::from(&[2., 3.]);
+        u.scl(2.);
+        assert_eq!(4.0, u.positions[0]);
+        assert_eq!(6.0, u.positions[1]);
+    }
+}

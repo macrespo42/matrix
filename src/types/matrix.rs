@@ -95,3 +95,35 @@ impl<K: fmt::Display> fmt::Display for Matrix<K> {
         write!(f, "]")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn matrix_add() {
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        let v = Matrix::from(&[&[7., 4.], &[-2., 2.]]);
+        u.add(&v);
+        assert_eq!(Vec::from([8.0, 6.0]), u.positions[0]);
+        assert_eq!(Vec::from([1.0, 6.0]), u.positions[1]);
+    }
+
+    #[test]
+    fn matrix_sub() {
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        let v = Matrix::from(&[&[7., 4.], &[-2., 2.]]);
+        u.sub(&v);
+        assert_eq!(Vec::from([-6.0, -2.0]), u.positions[0]);
+        assert_eq!(Vec::from([5.0, 2.0]), u.positions[1]);
+    }
+
+    #[test]
+    fn matrix_scale() {
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        u.scl(2.);
+        println!("{}", u);
+        assert_eq!(Vec::from([2.0, 4.0]), u.positions[0]);
+        assert_eq!(Vec::from([6.0, 8.0]), u.positions[1]);
+    }
+}
