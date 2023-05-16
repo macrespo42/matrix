@@ -1,5 +1,7 @@
-use std::io;
+use std::{io, println};
+mod mandatory;
 mod types;
+use crate::mandatory::linear_combination::linear_combination;
 use crate::types::{Matrix, Vector};
 
 fn main() {
@@ -22,6 +24,7 @@ fn main() {
 
     match exercice {
         0 => ex00(),
+        1 => ex01(),
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -68,5 +71,26 @@ fn ex00() {
     u.scl(2.);
     println!("expected [\n[2, 4]\n[6,8]\n]\n]");
     println!("got: {u}");
+    println!("-------------------------------------");
+}
+
+fn ex01() {
+    let e1 = Vector::from(&[1., 0., 0.]);
+    let e2 = Vector::from(&[0., 1., 0.]);
+    let e3 = Vector::from(&[0., 0., 1.]);
+    println!("\nExercise 01 - Linear combination\n");
+    println!("-------------------------------------");
+    println!("expected: [10, -2, 0.5]");
+    println!(
+        "got: {}",
+        linear_combination::<f32>(&[e1, e2, e3], &[10., -2., 0.5])
+    );
+    println!("-------------------------------------");
+
+    let v1 = Vector::from(&[1., 2., 3.]);
+    let v2 = Vector::from(&[0., 10., -100.]);
+
+    println!("expected: [10, 0, 230]");
+    println!("got: {}", linear_combination::<f32>(&[v1, v2], &[10., -2.]));
     println!("-------------------------------------");
 }

@@ -3,6 +3,7 @@ use std::fmt;
 pub struct Matrix<K> {
     pub positions: Vec<Vec<K>>,
 }
+
 impl<
         K: Copy + std::ops::Add<Output = K> + std::ops::Sub<Output = K> + std::ops::Mul<Output = K>,
     > Matrix<K>
