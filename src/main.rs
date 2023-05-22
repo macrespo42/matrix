@@ -2,6 +2,7 @@ use std::{io, println};
 mod mandatory;
 mod types;
 use crate::mandatory::linear_combination::linear_combination;
+use crate::mandatory::linear_interpolation::lerp;
 use crate::types::{Matrix, Vector};
 
 fn main() {
@@ -25,6 +26,7 @@ fn main() {
     match exercice {
         0 => ex00(),
         1 => ex01(),
+        2 => ex02(),
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -93,4 +95,44 @@ fn ex01() {
     println!("expected: [10, 0, 230]");
     println!("got: {}", linear_combination::<f32>(&[v1, v2], &[10., -2.]));
     println!("-------------------------------------");
+}
+
+fn ex02() {
+    println!("\nExercise 02 - Linear interpolation\n");
+    println!("-------------------------------------");
+    println!("lerp(0., 1. 0.)");
+    println!("expected: 0");
+    println!("got: {}", lerp(0., 1., 0.));
+    println!("-------------------------------------");
+    println!("lerp(0., 1., 1.)");
+    println!("expected: 1");
+    println!("got: {}", lerp(0., 1., 1.));
+    println!("-------------------------------------");
+    println!("lerp(0., 1., 0.5)");
+    println!("expected: 0.5");
+    println!("got: {}", lerp(0., 1., 0.5));
+    println!("-------------------------------------");
+    println!("lerp(21., 42., 0.3)");
+    println!("expected: 27.3");
+    println!("got: {}", lerp(21., 42., 0.3));
+    println!("-------------------------------------");
+    println!("lerp(Vector::from(&[2., 1.]), Vector::from(&[4., 2.]), 0.3)");
+    println!("expected: [2.6, 1.3]");
+    println!(
+        "got: {}",
+        lerp(Vector::from(&[2., 1.]), Vector::from(&[4., 2.]), 0.3)
+    );
+    println!("-------------------------------------");
+    println!(
+        "lerp(Matrix::from([[2., 1.], [3., 4.]]), Matrix::from([[20.,10.], [30., 40.]]), 0.5)"
+    );
+    println!("expected:[[11., 5.5], [16.5, 22.]]");
+    println!(
+        "got: {}",
+        lerp(
+            Matrix::from(&[&[2., 1.], &[3., 4.]]),
+            Matrix::from(&[&[20., 10.], &[30., 40.]]),
+            0.5,
+        )
+    );
 }
