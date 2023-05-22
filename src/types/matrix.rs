@@ -1,7 +1,50 @@
-use std::fmt;
+use std::{fmt, result};
 
+#[derive(Clone)]
 pub struct Matrix<K> {
     pub positions: Vec<Vec<K>>,
+}
+
+impl<K: std::ops::Add<Output = K> + Copy> std::ops::Add for Matrix<K> {
+    type Output = Matrix<K>;
+
+    fn add(self, other: Matrix<K>) -> Matrix<K> {
+        let mut result = self;
+        for (row, &ref other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
+            for (column, &other_column) in row.iter_mut().zip(other_row.iter()) {
+                *column = *column + other_column;
+            }
+        }
+        result
+    }
+}
+
+impl<K: std::ops::Sub<Output = K> + Copy> std::ops::Sub for Matrix<K> {
+    type Output = Matrix<K>;
+
+    fn sub(self, other: Matrix<K>) -> Matrix<K> {
+        let mut result = self;
+        for (row, &ref other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
+            for (column, &other_column) in row.iter_mut().zip(other_row.iter()) {
+                *column = *column - other_column;
+            }
+        }
+        result
+    }
+}
+
+impl<K: std::ops::Mul<f32, Output = K> + Copy> std::ops::Mul<f32> for Matrix<K> {
+    type Output = Matrix<K>;
+
+    fn mul(self, scalar: f32) -> Matrix<K> {
+        let mut result = self;
+        for row in result.positions.iter_mut() {
+            for value in row.iter_mut() {
+                *value = *value * scalar;
+            }
+        }
+        result
+    }
 }
 
 impl<

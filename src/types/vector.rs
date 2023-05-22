@@ -5,6 +5,42 @@ pub struct Vector<K> {
     pub positions: Vec<K>,
 }
 
+impl<K: std::ops::Add<Output = K> + Copy> std::ops::Add for Vector<K> {
+    type Output = Vector<K>;
+
+    fn add(self, other: Vector<K>) -> Vector<K> {
+        let mut result = self;
+        for (point, &other_point) in result.positions.iter_mut().zip(other.positions.iter()) {
+            *point = *point + other_point;
+        }
+        result
+    }
+}
+
+impl<K: std::ops::Sub<Output = K> + Copy> std::ops::Sub for Vector<K> {
+    type Output = Vector<K>;
+
+    fn sub(self, other: Vector<K>) -> Vector<K> {
+        let mut result = self;
+        for (point, &other_point) in result.positions.iter_mut().zip(other.positions.iter()) {
+            *point = *point - other_point;
+        }
+        result
+    }
+}
+
+impl<K: std::ops::Mul<f32, Output = K> + Copy> std::ops::Mul<f32> for Vector<K> {
+    type Output = Vector<K>;
+
+    fn mul(self, scalar: f32) -> Vector<K> {
+        let mut result = self;
+        for point in result.positions.iter_mut() {
+            *point = *point * scalar;
+        }
+        result
+    }
+}
+
 impl<K: fmt::Display> fmt::Display for Vector<K> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "[").expect("can't write in stdout");
