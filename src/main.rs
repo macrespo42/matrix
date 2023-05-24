@@ -27,6 +27,7 @@ fn main() {
         0 => ex00(),
         1 => ex01(),
         2 => ex02(),
+        3 => ex03(),
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -135,4 +136,25 @@ fn ex02() {
             0.5,
         )
     );
+}
+
+fn ex03() {
+    println!("\nExercise 03 - Dot product\n");
+    println!("-------------------------------------");
+    let u = Vector::from(&[0., 0.]);
+    let v = Vector::from(&[1., 1.]);
+    println!("dot product of : {u} and {v}");
+    println!("expected: 0");
+    println!("got: {}", u.dot(v));
+    println!("-------------------------------------");
+    let u = Vector::from(&[1., 1.]);
+    let v = Vector::from(&[1., 1.]);
+    println!("dot product of : {u} and {v}");
+    println!("expected: 2");
+    println!("got: {}", u.dot(v));
+    println!("-------------------------------------");
+    let u = Vector::from(&[-1., 6.]);
+    let v = Vector::from(&[3., 2.]);
+    println!("expected: 9");
+    println!("got: {}", u.dot(v));
 }

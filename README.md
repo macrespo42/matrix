@@ -15,7 +15,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 00 - Add, Subtract and Scale](#ex00)
 - [Exercise 01 - Linear combination](#ex01)
 - [Exercise 02 - Linear interpolation](#ex02)
-- [Exercise 03 - Dot product]()
+- [Exercise 03 - Dot product](#ex03)
 - [Exercise 04 - Norm]()
 
 </details>
@@ -48,3 +48,11 @@ Maximum space complexity : **O(n)**
 
 You must write a function that computes a linear interpolation between two objects of the same type.
 You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.
+
+### <a name="ex03">Exercise 03 - Dot product</a>
+
+Maximum time complexity : **O(n)**  
+Maximum space complexity : **O(n)**  
+
+You must write a function that computes the dot product of two vectors of the same dimension.  
+You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.  
