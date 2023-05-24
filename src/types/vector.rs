@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, panic};
 
 #[derive(Clone)]
 pub struct Vector<K> {
@@ -111,10 +111,23 @@ impl<
             *point = *point * a;
         }
     }
+
+    pub fn dot(&self, v: Vector<K>) -> K {
+        if self.positions.len() != v.positions.len() {
+            panic!("vectors must have the same size for dot product");
+        }
+        let mut result = self.positions[0] * v.positions[0];
+        for i in 1..self.positions.len() {
+            result = result + (self.positions[i] * v.positions[i])
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::assert_eq;
+
     use super::*;
 
     #[test]
@@ -141,5 +154,18 @@ mod tests {
         u.scl(2.);
         assert_eq!(4.0, u.positions[0]);
         assert_eq!(6.0, u.positions[1]);
+    }
+
+    #[test]
+    fn dot_basics() {
+        let u = Vector::from(&[0., 0.]);
+        let v = Vector::from(&[1., 1.]);
+        assert_eq!(0.0, u.dot(v));
+        let u = Vector::from(&[1., 1.]);
+        let v = Vector::from(&[1., 1.]);
+        assert_eq!(2., u.dot(v));
+        let u = Vector::from(&[-1., 6.]);
+        let v = Vector::from(&[3., 2.]);
+        assert_eq!(9., u.dot(v));
     }
 }
