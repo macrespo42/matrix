@@ -1,4 +1,4 @@
-use std::{fmt, panic};
+use std::{fmt, panic, println};
 
 #[derive(Clone)]
 pub struct Vector<K> {
@@ -124,6 +124,35 @@ impl<
     }
 }
 
+impl<
+        K: Clone + std::ops::Mul<K, Output = K> + std::ops::Add<f32> + Into<f32> + std::fmt::Display,
+    > Vector<K>
+{
+    pub fn norm_1(&self) -> f32 {
+        let mut result = self.abs(self.positions[0].clone());
+        for index in 1..self.positions.len() {
+            result += self.abs(self.positions[index].clone());
+        }
+        result
+    }
+
+    pub fn norm(&self) -> f32 {
+        let mut result = self.abs(self.positions[0].clone()).powf(2.);
+        for index in 1..self.positions.len() {
+            result += self.abs(self.positions[index].clone()).powf(2.);
+            println!("{result}");
+        }
+        result.sqrt()
+    }
+
+    fn abs(&self, val: K) -> f32 {
+        if val.clone().into() < 0. {
+            return val.clone().into() * -1.;
+        }
+        val.into()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::assert_eq;
@@ -167,5 +196,20 @@ mod tests {
         let u = Vector::from(&[-1., 6.]);
         let v = Vector::from(&[3., 2.]);
         assert_eq!(9., u.dot(v));
+    }
+
+    #[test]
+    fn norms_test() {
+        let u = Vector::from(&[0., 0., 0.]);
+        assert_eq!(u.norm_1(), 0.0);
+        assert_eq!(u.norm(), 0.0);
+
+        let u = Vector::from(&[1., 2., 3.]);
+        assert_eq!(u.norm_1(), 6.0);
+        assert_eq!(u.norm(), 3.74165738);
+
+        let u = Vector::from(&[-1., -2.]);
+        assert_eq!(u.norm_1(), 3.0);
+        assert_eq!(u.norm(), 2.236067977);
     }
 }

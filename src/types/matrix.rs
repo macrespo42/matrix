@@ -1,4 +1,4 @@
-use std::{fmt, result};
+use std::fmt;
 
 #[derive(Clone)]
 pub struct Matrix<K> {
