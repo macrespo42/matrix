@@ -1,4 +1,4 @@
-use std::{fmt, panic, println};
+use std::{fmt, panic, println, result};
 
 #[derive(Clone)]
 pub struct Vector<K> {
@@ -124,10 +124,7 @@ impl<
     }
 }
 
-impl<
-        K: Clone + std::ops::Mul<K, Output = K> + std::ops::Add<f32> + Into<f32> + std::fmt::Display,
-    > Vector<K>
-{
+impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32> + std::fmt::Display> Vector<K> {
     pub fn norm_1(&self) -> f32 {
         let mut result = self.abs(self.positions[0].clone());
         for index in 1..self.positions.len() {
@@ -137,12 +134,44 @@ impl<
     }
 
     pub fn norm(&self) -> f32 {
-        let mut result = self.abs(self.positions[0].clone()).powf(2.);
+        let mut result: f32 = self.abs(self.positions[0].clone()).powf(2.);
         for index in 1..self.positions.len() {
             result += self.abs(self.positions[index].clone()).powf(2.);
             println!("{result}");
         }
-        result.sqrt()
+        // square root of result Newton-Raphson algorithm
+        if result < 0. {
+            return f32::NAN;
+        }
+
+        let mut guess = result;
+        let mut prev_guess = 0.;
+        let mut guess_result = prev_guess - guess;
+
+        if guess_result < 0. {
+            guess_result *= -1.;
+        }
+        while guess_result > 0.00000001 {
+            prev_guess = guess;
+            guess = 0.5 * (guess + result / guess);
+            guess_result = prev_guess - guess;
+            if guess_result < 0. {
+                guess_result *= -1.;
+            }
+        }
+
+        guess
+    }
+
+    pub fn norm_max(&self) -> f32 {
+        let mut result: f32 = self.abs(self.positions[0].clone());
+        for index in 1..self.positions.len() {
+            let elt: f32 = self.abs(self.positions[index].clone());
+            if elt > result {
+                result = elt;
+            }
+        }
+        result
     }
 
     fn abs(&self, val: K) -> f32 {
@@ -199,17 +228,58 @@ mod tests {
     }
 
     #[test]
-    fn norms_test() {
+    fn norms_test_basics() {
         let u = Vector::from(&[0., 0., 0.]);
         assert_eq!(u.norm_1(), 0.0);
         assert_eq!(u.norm(), 0.0);
+        assert_eq!(u.norm_max(), 0.0);
 
         let u = Vector::from(&[1., 2., 3.]);
         assert_eq!(u.norm_1(), 6.0);
-        assert_eq!(u.norm(), 3.74165738);
+        assert_eq!(u.norm(), 3.7416573);
+        assert_eq!(u.norm_max(), 3.);
 
         let u = Vector::from(&[-1., -2.]);
         assert_eq!(u.norm_1(), 3.0);
         assert_eq!(u.norm(), 2.236067977);
+        assert_eq!(u.norm_max(), 2.);
+    }
+
+    #[test]
+    fn norms_test_hards() {
+        let u = Vector::from(&[0.]);
+        assert_eq!(u.norm_1(), 0.);
+        assert_eq!(u.norm(), 0.);
+        assert_eq!(u.norm_max(), 0.);
+
+        let u = Vector::from(&[1.]);
+        assert_eq!(u.norm_1(), 1.);
+        assert_eq!(u.norm(), 1.);
+        assert_eq!(u.norm_max(), 1.);
+
+        let u = Vector::from(&[0., 0.]);
+        assert_eq!(u.norm_1(), 0.);
+        assert_eq!(u.norm(), 0.);
+        assert_eq!(u.norm_max(), 0.);
+
+        let u = Vector::from(&[1., 0.]);
+        assert_eq!(u.norm_1(), 1.);
+        assert_eq!(u.norm(), 1.);
+        assert_eq!(u.norm_max(), 1.);
+
+        let u = Vector::from(&[2., 1.]);
+        assert_eq!(u.norm_1(), 3.);
+        assert_eq!(u.norm(), 2.236067977);
+        assert_eq!(u.norm_max(), 2.);
+
+        let u = Vector::from(&[4., 2.]);
+        assert_eq!(u.norm_1(), 6.);
+        assert_eq!(u.norm(), 4.472135955);
+        assert_eq!(u.norm_max(), 4.);
+
+        let u = Vector::from(&[-4., -2.]);
+        assert_eq!(u.norm_1(), 6.);
+        assert_eq!(u.norm(), 4.472135955);
+        assert_eq!(u.norm_max(), 4.);
     }
 }
