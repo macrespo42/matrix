@@ -137,7 +137,6 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32> + std::fmt::Display> Ve
         let mut result: f32 = self.abs(self.positions[0].clone()).powf(2.);
         for index in 1..self.positions.len() {
             result += self.abs(self.positions[index].clone()).powf(2.);
-            println!("{result}");
         }
         // square root of result Newton-Raphson algorithm
         if result < 0. {
@@ -163,7 +162,7 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32> + std::fmt::Display> Ve
         guess
     }
 
-    pub fn norm_max(&self) -> f32 {
+    pub fn norm_inf(&self) -> f32 {
         let mut result: f32 = self.abs(self.positions[0].clone());
         for index in 1..self.positions.len() {
             let elt: f32 = self.abs(self.positions[index].clone());
@@ -232,17 +231,17 @@ mod tests {
         let u = Vector::from(&[0., 0., 0.]);
         assert_eq!(u.norm_1(), 0.0);
         assert_eq!(u.norm(), 0.0);
-        assert_eq!(u.norm_max(), 0.0);
+        assert_eq!(u.norm_inf(), 0.0);
 
         let u = Vector::from(&[1., 2., 3.]);
         assert_eq!(u.norm_1(), 6.0);
         assert_eq!(u.norm(), 3.7416573);
-        assert_eq!(u.norm_max(), 3.);
+        assert_eq!(u.norm_inf(), 3.);
 
         let u = Vector::from(&[-1., -2.]);
         assert_eq!(u.norm_1(), 3.0);
         assert_eq!(u.norm(), 2.236067977);
-        assert_eq!(u.norm_max(), 2.);
+        assert_eq!(u.norm_inf(), 2.);
     }
 
     #[test]
@@ -250,36 +249,36 @@ mod tests {
         let u = Vector::from(&[0.]);
         assert_eq!(u.norm_1(), 0.);
         assert_eq!(u.norm(), 0.);
-        assert_eq!(u.norm_max(), 0.);
+        assert_eq!(u.norm_inf(), 0.);
 
         let u = Vector::from(&[1.]);
         assert_eq!(u.norm_1(), 1.);
         assert_eq!(u.norm(), 1.);
-        assert_eq!(u.norm_max(), 1.);
+        assert_eq!(u.norm_inf(), 1.);
 
         let u = Vector::from(&[0., 0.]);
         assert_eq!(u.norm_1(), 0.);
         assert_eq!(u.norm(), 0.);
-        assert_eq!(u.norm_max(), 0.);
+        assert_eq!(u.norm_inf(), 0.);
 
         let u = Vector::from(&[1., 0.]);
         assert_eq!(u.norm_1(), 1.);
         assert_eq!(u.norm(), 1.);
-        assert_eq!(u.norm_max(), 1.);
+        assert_eq!(u.norm_inf(), 1.);
 
         let u = Vector::from(&[2., 1.]);
         assert_eq!(u.norm_1(), 3.);
         assert_eq!(u.norm(), 2.236067977);
-        assert_eq!(u.norm_max(), 2.);
+        assert_eq!(u.norm_inf(), 2.);
 
         let u = Vector::from(&[4., 2.]);
         assert_eq!(u.norm_1(), 6.);
         assert_eq!(u.norm(), 4.472135955);
-        assert_eq!(u.norm_max(), 4.);
+        assert_eq!(u.norm_inf(), 4.);
 
         let u = Vector::from(&[-4., -2.]);
         assert_eq!(u.norm_1(), 6.);
         assert_eq!(u.norm(), 4.472135955);
-        assert_eq!(u.norm_max(), 4.);
+        assert_eq!(u.norm_inf(), 4.);
     }
 }

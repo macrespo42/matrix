@@ -28,6 +28,7 @@ fn main() {
         1 => ex01(),
         2 => ex02(),
         3 => ex03(),
+        4 => ex04(),
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -157,4 +158,22 @@ fn ex03() {
     let v = Vector::from(&[3., 2.]);
     println!("expected: 9");
     println!("got: {}", u.dot(v));
+}
+
+fn ex04() {
+    println!("\nExercise 04 - Norm");
+    println!("-------------------------------------");
+    let u = Vector::from(&[0., 0., 0.]);
+    println!("taxicab norm of vector: {u}");
+    println!("expected: 0.");
+    println!("got {}", u.norm_1());
+    println!("-------------------------------------");
+    println!("euclidian norm of vector: {u}");
+    println!("expected: 0.");
+    println!("got {}", u.norm());
+    println!("-------------------------------------");
+    println!("l-infinity norm of vector: {u}");
+    println!("expected: 0.");
+    println!("got {}", u.norm_inf());
+    println!("-------------------------------------");
 }
