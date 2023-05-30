@@ -1,4 +1,4 @@
-use std::{io, println};
+use std::io;
 mod mandatory;
 mod types;
 use crate::mandatory::linear_combination::linear_combination;
@@ -24,18 +24,43 @@ fn main() {
     };
 
     match exercice {
-        0 => ex00(),
-        1 => ex01(),
-        2 => ex02(),
+        0 => {
+            ex00();
+        }
+        1 => {
+            ex01();
+        }
+        2 => {
+            ex02();
+        }
         3 => ex03(),
-        4 => ex04(),
+        4 => {
+            let u = Vector::from(&[0., 0., 0.]);
+            ex04(u, ["0.", "0.", "0."]);
+            let u = Vector::from(&[1., 2., 3.]);
+            ex04(u, ["6.0", "3.7416573", "3."]);
+            let u = Vector::from(&[-1., -2.]);
+            ex04(u, ["3.0", "2.236067977", "2."]);
+            let u = Vector::from(&[0.]);
+            ex04(u, ["0.", "0.", "0."]);
+            let u = Vector::from(&[1.]);
+            ex04(u, ["1.", "1.", "1."]);
+            let u = Vector::from(&[0., 0.]);
+            ex04(u, ["0.", "0.", "0."]);
+            let u = Vector::from(&[1., 0.]);
+            ex04(u, ["1.", "1.", "1."]);
+            let u = Vector::from(&[2., 1.]);
+            ex04(u, ["3.", "2.236067977", "2."]);
+            let u = Vector::from(&[4., 2.]);
+            ex04(u, ["6.", "4.472135955", "4"]);
+            let u = Vector::from(&[-4., -2.]);
+            ex04(u, ["6.", "4.472135955", "4"]);
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
 
 fn ex00() {
-    println!("\nExercise 00 - Add, Subtract and Scale\n");
-    println!("-------------------------------------");
     let mut u = Vector::from(&[2., 3.]);
     let v = Vector::from(&[5., 7.]);
     u.add(&v);
@@ -75,15 +100,12 @@ fn ex00() {
     u.scl(2.);
     println!("expected [\n[2, 4]\n[6,8]\n]\n]");
     println!("got: {u}");
-    println!("-------------------------------------");
 }
 
 fn ex01() {
     let e1 = Vector::from(&[1., 0., 0.]);
     let e2 = Vector::from(&[0., 1., 0.]);
     let e3 = Vector::from(&[0., 0., 1.]);
-    println!("\nExercise 01 - Linear combination\n");
-    println!("-------------------------------------");
     println!("expected: [10, -2, 0.5]");
     println!(
         "got: {}",
@@ -96,12 +118,9 @@ fn ex01() {
 
     println!("expected: [10, 0, 230]");
     println!("got: {}", linear_combination::<f32>(&[v1, v2], &[10., -2.]));
-    println!("-------------------------------------");
 }
 
 fn ex02() {
-    println!("\nExercise 02 - Linear interpolation\n");
-    println!("-------------------------------------");
     println!("lerp(0., 1. 0.)");
     println!("expected: 0");
     println!("got: {}", lerp(0., 1., 0.));
@@ -160,20 +179,25 @@ fn ex03() {
     println!("got: {}", u.dot(v));
 }
 
-fn ex04() {
+fn ex04<K>(u: Vector<K>, expected: [&str; 3])
+where
+    K: Clone,
+    K: Into<f32>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
     println!("\nExercise 04 - Norm");
     println!("-------------------------------------");
-    let u = Vector::from(&[0., 0., 0.]);
     println!("taxicab norm of vector: {u}");
-    println!("expected: 0.");
+    println!("expected: {}", expected[0]);
     println!("got {}", u.norm_1());
     println!("-------------------------------------");
     println!("euclidian norm of vector: {u}");
-    println!("expected: 0.");
+    println!("expected: {}", expected[1]);
     println!("got {}", u.norm());
     println!("-------------------------------------");
     println!("l-infinity norm of vector: {u}");
-    println!("expected: 0.");
+    println!("expected: {}", expected[2]);
     println!("got {}", u.norm_inf());
     println!("-------------------------------------");
 }
