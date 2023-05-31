@@ -124,7 +124,7 @@ impl<
     }
 }
 
-impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32> + std::fmt::Display> Vector<K> {
+impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     pub fn norm_1(&self) -> f32 {
         let mut result = self.abs(self.positions[0].clone());
         for index in 1..self.positions.len() {

@@ -17,6 +17,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 02 - Linear interpolation](#ex02)
 - [Exercise 03 - Dot product](#ex03)
 - [Exercise 04 - Norm](#ex04)
+- [Exercise 05 - Cosine](#ex05)
 
 </details>
 
@@ -66,3 +67,15 @@ Maximum space complexity : **O(n)**
 You must write functions that compute different kinds of norms.  
 You must also turn in a main function in order to test your functions, ready to be  
 compiled (if necessary) and run.  
+
+### <a name="ex05"> Exercise 05 - Cosine</a>
+
+Maximum time complexity : **O(n)**  
+Maximum space complexity : **O(n)**  
+
+You must write functions that compute the cosine of the angle between two given vectors.  
+You must also turn in a main function in order to test your function, ready to be  
+compiled (if necessary) and run.  
+
+**Reminder:** The usage of the standard library’s cos function is  
+forbidden, of course.  

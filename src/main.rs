@@ -1,6 +1,7 @@
 use std::io;
 mod mandatory;
 mod types;
+use crate::mandatory::cosine::angle_cos;
 use crate::mandatory::linear_combination::linear_combination;
 use crate::mandatory::linear_interpolation::lerp;
 use crate::types::{Matrix, Vector};
@@ -35,6 +36,8 @@ fn main() {
         }
         3 => ex03(),
         4 => {
+            println!("\nExercise 04 - Norm");
+            println!("-------------------------------------");
             let u = Vector::from(&[0., 0., 0.]);
             ex04(u, ["0.", "0.", "0."]);
             let u = Vector::from(&[1., 2., 3.]);
@@ -55,6 +58,29 @@ fn main() {
             ex04(u, ["6.", "4.472135955", "4"]);
             let u = Vector::from(&[-4., -2.]);
             ex04(u, ["6.", "4.472135955", "4"]);
+        }
+        5 => {
+            println!("\nExercise 05 - Cosine\n");
+            println!("-------------------------------------");
+            let u = Vector::from(&[1., 0.]);
+            let v = Vector::from(&[1., 0.]);
+            ex05(&u, &v, 1.0);
+
+            let u = Vector::from(&[1., 0.]);
+            let v = Vector::from(&[0., 1.]);
+            ex05(&u, &v, 0.0);
+
+            let u = Vector::from(&[-1., 1.]);
+            let v = Vector::from(&[1., -1.]);
+            ex05(&u, &v, -1.0000001);
+
+            let u = Vector::from(&[2., 1.]);
+            let v = Vector::from(&[4., 2.]);
+            ex05(&u, &v, 1.0);
+
+            let u = Vector::from(&[1., 2., 3.]);
+            let v = Vector::from(&[4., 5., 6.]);
+            ex05(&u, &v, 0.9746319);
         }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
@@ -186,8 +212,6 @@ where
     K: std::ops::Mul<K, Output = K>,
     K: std::fmt::Display,
 {
-    println!("\nExercise 04 - Norm");
-    println!("-------------------------------------");
     println!("taxicab norm of vector: {u}");
     println!("expected: {}", expected[0]);
     println!("got {}", u.norm_1());
@@ -200,4 +224,18 @@ where
     println!("expected: {}", expected[2]);
     println!("got {}", u.norm_inf());
     println!("-------------------------------------");
+}
+
+fn ex05<K>(u: &Vector<K>, v: &Vector<K>, expected: f32)
+where
+    K: Copy,
+    K: Into<f32>,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("cosines of {v} and {u}");
+    println!("expected: {expected}");
+    println!("got: {}", angle_cos::<K>(&u, &v));
 }
