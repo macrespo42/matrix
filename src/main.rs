@@ -10,7 +10,11 @@ fn main() {
     println!("Welcome to the matrix ! Choose the exercice you want to check 💊:");
     println!("Available :");
     for n in 0..15 {
-        println!(" - {n}")
+        if n < 10 {
+            println!(" - Exercice 0{n}");
+        } else {
+            println!(" - Exercice {n}");
+        }
     }
 
     let mut exercice = String::from("");
