@@ -2,6 +2,7 @@ use std::io;
 mod mandatory;
 mod types;
 use crate::mandatory::cosine::angle_cos;
+use crate::mandatory::cross_product::cross_product;
 use crate::mandatory::linear_combination::linear_combination;
 use crate::mandatory::linear_interpolation::lerp;
 use crate::types::{Matrix, Vector};
@@ -85,6 +86,19 @@ fn main() {
             let u = Vector::from(&[1., 2., 3.]);
             let v = Vector::from(&[4., 5., 6.]);
             ex05(&u, &v, 0.9746319);
+        }
+        6 => {
+            println!("\nExercise 06 - Cross product\n");
+            println!("-------------------------------------");
+            let u = Vector::from(&[0., 0., 1.]);
+            let v = Vector::from(&[1., 0., 0.]);
+            ex06(&u, &v, "[0., 1., 0.]");
+            let u = Vector::from(&[1., 2., 3.]);
+            let v = Vector::from(&[4., 5., 6.]);
+            ex06(&u, &v, "[-3., 6., -3.]");
+            let u = Vector::from(&[4., 2., -3.]);
+            let v = Vector::from(&[-2., -5., 16.]);
+            ex06(&u, &v, "[17., -58, -16.]");
         }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
@@ -242,4 +256,19 @@ where
     println!("cosines of {v} and {u}");
     println!("expected: {expected}");
     println!("got: {}", angle_cos::<K>(&u, &v));
+}
+
+fn ex06<K>(u: &Vector<K>, v: &Vector<K>, expected: &str)
+where
+    K: Copy,
+    K: Into<f32>,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("Cross product of {u} and {v}");
+    println!("expected: {expected}");
+    println!("got: {}", cross_product(u, v));
+    println!("-------------------------------------");
 }
