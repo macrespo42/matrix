@@ -84,7 +84,7 @@ forbidden, of course.
 ### <a name="ex06"> Exercise 06 - Cross product</a>
 
 Maximum time complexity : ***N/A***
-Maximum space complexity : ***N/A*** 
+Maximum space complexity : ***N/A***  
 
 You must write a function that computes the cross product of two 3-dimensional vectors.  
 You must also turn in a main function in order to test your function, ready to be  
