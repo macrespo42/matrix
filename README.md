@@ -18,6 +18,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 03 - Dot product](#ex03)
 - [Exercise 04 - Norm](#ex04)
 - [Exercise 05 - Cosine](#ex05)
+- [Exercise 06 - Cross product](#ex06)
 
 </details>
 
@@ -79,3 +80,12 @@ compiled (if necessary) and run.
 
 **Reminder:** The usage of the standard library’s cos function is  
 forbidden, of course.  
+
+### <a name="ex06"> Exercise 06 - Cross product</a>
+
+Maximum time complexity : ***N/A***
+Maximum space complexity : ***N/A*** 
+
+You must write a function that computes the cross product of two 3-dimensional vectors.  
+You must also turn in a main function in order to test your function, ready to be  
+compiled (if necessary) and run.  
