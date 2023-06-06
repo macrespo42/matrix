@@ -100,6 +100,31 @@ fn main() {
             let v = Vector::from(&[-2., -5., 16.]);
             ex06(&u, &v, "[17., -58, -16.]");
         }
+        7 => {
+            println!("\nExercise 07 - Linear map, Matrix multiplication\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+            let v = Vector::from(&[4., 2.]);
+            ex07_with_vec(&mut u, v, "[4., 2.]");
+            let mut u = Matrix::from(&[&[2., 0.], &[0., 2.]]);
+            let v = Vector::from(&[4., 2.]);
+            ex07_with_vec(&mut u, v, "[8., 4.]");
+            let mut u = Matrix::from(&[&[2., -2.], &[-2., 2.]]);
+            let v = Vector::from(&[4., 2.]);
+            ex07_with_vec(&mut u, v, "[4., -4.]");
+            let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+            let v = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+            ex07_with_mat(&mut u, v, "[1., 0.]\n[0., 0.]");
+            let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+            let v = Matrix::from(&[&[2., 1.], &[4., 2.]]);
+            ex07_with_mat(&mut u, v, "[2., 1.]\n[4., 2.]");
+            let mut u = Matrix::from(&[&[3., -5.], &[6., 8.]]);
+            let v = Matrix::from(&[&[2., 1.], &[4., 2.]]);
+            ex07_with_mat(&mut u, v, "[-14, -7.]\n[44., 22.]");
+            let mut u = Matrix::from(&[&[0., 4., -2.], &[-4., -3., 0.]]);
+            let v = Matrix::from(&[&[0., 1.], &[1., -1.], &[2., 3.]]);
+            ex07_with_mat(&mut u, v, "[0., -10.]\n[-3., -1]");
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -261,7 +286,6 @@ where
 fn ex06<K>(u: &Vector<K>, v: &Vector<K>, expected: &str)
 where
     K: Copy,
-    K: Into<f32>,
     K: std::ops::Add<K, Output = K>,
     K: std::ops::Sub<K, Output = K>,
     K: std::ops::Mul<K, Output = K>,
@@ -270,5 +294,33 @@ where
     println!("Cross product of {u} and {v}");
     println!("expected: {expected}");
     println!("got: {}", cross_product(u, v));
+    println!("-------------------------------------");
+}
+
+fn ex07_with_vec<K>(mat: &mut Matrix<K>, vec: Vector<K>, expected: &str)
+where
+    K: Copy,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("mul_vec {mat} with {vec}");
+    println!("expected: {expected}");
+    println!("got: {}", mat.mul_vec(vec));
+    println!("-------------------------------------");
+}
+
+fn ex07_with_mat<K>(u: &mut Matrix<K>, mat: Matrix<K>, expected: &str)
+where
+    K: Copy,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("mul_mat {u} with {mat}");
+    println!("expected: \n{expected}");
+    println!("got: {}", u.mul_mat(mat));
     println!("-------------------------------------");
 }

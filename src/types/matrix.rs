@@ -123,7 +123,7 @@ impl<
         }
     }
 
-    fn mul_vec(&mut self, vec: Vector<K>) -> Vector<K> {
+    pub fn mul_vec(&mut self, vec: Vector<K>) -> Vector<K> {
         if self.column_size() != vec.size() {
             panic!("The number of columns in this Matrix must equals the number of rows in vec");
         }
@@ -136,10 +136,7 @@ impl<
         result
     }
 
-    fn mul_mat(&mut self, mat: Matrix<K>) -> Matrix<K>
-    where
-        K: std::fmt::Display,
-    {
+    pub fn mul_mat(&mut self, mat: Matrix<K>) -> Matrix<K> {
         if self.row_size() != mat.column_size() {
             println!(
                 "self row: {} | mat column: {}",
