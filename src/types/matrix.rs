@@ -1,3 +1,4 @@
+use crate::Vector;
 use std::fmt;
 
 #[derive(Clone)]
@@ -121,6 +122,53 @@ impl<
             }
         }
     }
+
+    fn mul_vec(&mut self, vec: Vector<K>) -> Vector<K> {
+        if self.column_size() != vec.size() {
+            panic!("The number of columns in this Matrix must equals the number of rows in vec");
+        }
+        let mut result: Vector<K> = Vector::from(&[]);
+
+        for row in self.positions.iter() {
+            let row_to_vector: Vector<K> = Vector::from(&row);
+            result.positions.push(row_to_vector.dot(vec.clone()));
+        }
+        result
+    }
+
+    fn mul_mat(&mut self, mat: Matrix<K>) -> Matrix<K>
+    where
+        K: std::fmt::Display,
+    {
+        if self.row_size() != mat.column_size() {
+            println!(
+                "self row: {} | mat column: {}",
+                self.row_size(),
+                mat.column_size()
+            );
+            panic!("The number of columns in this Matrix must equals the number of rows in mat");
+        }
+        let mut mat_rotated: Matrix<K> = Matrix::from(&[]);
+        for column in 0..mat.column_size() {
+            let mut mat_rotated_row: Vec<K> = Vec::new();
+            for row in 0..mat.row_size() {
+                mat_rotated_row.push(mat.clone().positions[row][column]);
+            }
+            mat_rotated.positions.push(mat_rotated_row);
+        }
+
+        let mut result: Matrix<K> = Matrix::from(&[]);
+        for row in self.clone().positions {
+            let mut result_row: Vec<K> = Vec::new();
+            for rotated_mat_row in mat_rotated.clone().positions {
+                let rotated_mat_to_vec: Vector<K> = Vector::from(&rotated_mat_row);
+                let product: K = Vector::from(&row).dot(rotated_mat_to_vec);
+                result_row.push(product);
+            }
+            result.positions.push(result_row);
+        }
+        result
+    }
 }
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
@@ -169,5 +217,53 @@ mod tests {
         println!("{}", u);
         assert_eq!(Vec::from([2.0, 4.0]), u.positions[0]);
         assert_eq!(Vec::from([6.0, 8.0]), u.positions[1]);
+    }
+
+    #[test]
+    fn matrix_mul_vec() {
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 4.);
+        assert_eq!(result.positions[1], 2.);
+
+        let mut u = Matrix::from(&[&[2., 0.], &[0., 2.]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 8.);
+        assert_eq!(result.positions[1], 4.);
+
+        let mut u = Matrix::from(&[&[2., -2.], &[-2., 2.]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 4.);
+        assert_eq!(result.positions[1], -4.);
+    }
+
+    #[test]
+    fn matrix_mul_mat() {
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let v = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let result = u.mul_mat(v);
+        assert_eq!(result.positions[0], Vec::from([1., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 1.]));
+
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let v = Matrix::from(&[&[2., 1.], &[4., 2.]]);
+        let result = u.mul_mat(v);
+        assert_eq!(result.positions[0], Vec::from([2., 1.]));
+        assert_eq!(result.positions[1], Vec::from([4., 2.]));
+
+        let mut u = Matrix::from(&[&[3., -5.], &[6., 8.]]);
+        let v = Matrix::from(&[&[2., 1.], &[4., 2.]]);
+        let result = u.mul_mat(v);
+        assert_eq!(result.positions[0], Vec::from([-14., -7.]));
+        assert_eq!(result.positions[1], Vec::from([44., 22.]));
+
+        let mut u = Matrix::from(&[&[0., 4., -2.], &[-4., -3., 0.]]);
+        let v = Matrix::from(&[&[0., 1.], &[1., -1.], &[2., 3.]]);
+        let result = u.mul_mat(v);
+        assert_eq!(result.positions[0], Vec::from([0., -10.]));
+        assert_eq!(result.positions[1], Vec::from([-3., -1.]));
     }
 }
