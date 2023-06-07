@@ -135,6 +135,16 @@ fn main() {
             let mut u = Matrix::from(&[&[-2., -8., 4.], &[1., -23., 4.], &[0., 6., 4.]]);
             ex08(&mut u, "-21.0");
         }
+        9 => {
+            println!("\nExercise 09 - Transpose\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[0., 0.], &[0., 0.]]);
+            ex09(&mut u, "[0., 0.]\n[0., 0.]");
+            let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+            ex09(&mut u, "[1., 3.]\n[2., 4.]");
+            let mut u = Matrix::from(&[&[1., 2., 3.], &[4., 5., 6.]]);
+            ex09(&mut u, "[1., 4.]\n[2., 5.]\n[3., 6.]");
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -346,5 +356,19 @@ where
     println!("Trace of {u}");
     println!("expected: {expected}");
     println!("got: {}", u.trace());
+    println!("-------------------------------------");
+}
+
+fn ex09<K>(u: &mut Matrix<K>, expected: &str)
+where
+    K: Copy,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("Transpose of \n {}", u);
+    println!("expected: \n{expected}");
+    println!("got: {}", u.transpose());
     println!("-------------------------------------");
 }

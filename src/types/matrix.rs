@@ -185,6 +185,18 @@ impl<
 
         result
     }
+
+    pub fn transpose(&mut self) -> Matrix<K> {
+        let mut mat_rotated: Matrix<K> = Matrix::from(&[]);
+        for column in 0..self.column_size() {
+            let mut mat_rotated_row: Vec<K> = Vec::new();
+            for row in 0..self.row_size() {
+                mat_rotated_row.push(self.clone().positions[row][column]);
+            }
+            mat_rotated.positions.push(mat_rotated_row);
+        }
+        mat_rotated
+    }
 }
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
@@ -299,5 +311,47 @@ mod tests {
     fn matrix_trace_negative() {
         let mut u = Matrix::from(&[&[-2., -8., 4.], &[1., -23., 4.], &[0., 6., 4.]]);
         assert_eq!(u.trace(), -21.0);
+    }
+
+    #[test]
+    fn matrix_transpose_zero() {
+        let mut u = Matrix::from(&[&[0., 0.], &[0., 0.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([0., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 0.]));
+    }
+
+    #[test]
+    fn matrix_transpose_no_change() {
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([1., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 1.]));
+    }
+
+    #[test]
+    fn matrix_transpose_reverse() {
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([1., 3.]));
+        assert_eq!(result.positions[1], Vec::from([2., 4.]));
+    }
+
+    #[test]
+    fn matrix_transpose_bin_no_change() {
+        let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([1., 0., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 1., 0.]));
+        assert_eq!(result.positions[2], Vec::from([0., 0., 1.]));
+    }
+
+    #[test]
+    fn matrix_transpose_positive() {
+        let mut u = Matrix::from(&[&[1., 2., 3.], &[4., 5., 6.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([1., 4.]));
+        assert_eq!(result.positions[1], Vec::from([2., 5.]));
+        assert_eq!(result.positions[2], Vec::from([3., 6.]));
     }
 }

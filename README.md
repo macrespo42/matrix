@@ -21,6 +21,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 06 - Cross product](#ex06)
 - [Exercise 07 - Linear map, Matrix multiplication](#ex07)
 - [Exercise 08 - Trace](#ex08)
+- [Exercise 09 - Transpose](#ex09)
 
 </details>
 
@@ -119,3 +120,15 @@ f32) and (m, n) ∈ N
 2
 (represented as two variables of type u32).
 The function must compute and return T r(A)
+
+### <a name="ex09"> Exercise 09 - Transpose</a>
+
+Maximum time complexity : ***O(nm)***  
+Maximum space complexity : ***O(nm)***  
+
+You must write a function that computes the transpose matrix of a given matrix.  
+You must also turn in a main function in order to test your function, ready to be  
+compiled (if necessary) and run.  
+
+Let A ∈ Km×n where K is the real numbers (represented as the type f32) and (m, n) ∈ N2 (represented as values of the type u32).  
+The function must return the transpose matrix B ∈ Kn×m  
