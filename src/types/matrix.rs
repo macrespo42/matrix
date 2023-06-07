@@ -166,6 +166,25 @@ impl<
         }
         result
     }
+
+    pub fn trace(&mut self) -> K
+    where
+        K: std::fmt::Display,
+    {
+        if self.shape() == (0, 0) {
+            panic!("Can't trace an empty matrix");
+        }
+        let mut result: K = self.positions[0][0];
+        let mut col_index: usize = 1;
+        let mut row_index: usize = 1;
+        while col_index < self.column_size() && row_index < self.row_size() {
+            result = result + self.positions[row_index][col_index];
+            col_index += 1;
+            row_index += 1;
+        }
+
+        result
+    }
 }
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
@@ -262,5 +281,23 @@ mod tests {
         let result = u.mul_mat(v);
         assert_eq!(result.positions[0], Vec::from([0., -10.]));
         assert_eq!(result.positions[1], Vec::from([-3., -1.]));
+    }
+
+    #[test]
+    fn matrix_trace_with_zero() {
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        assert_eq!(u.trace(), 2.0);
+    }
+
+    #[test]
+    fn matrix_trace_positive() {
+        let mut u = Matrix::from(&[&[2., -5., 0.], &[4., 3., 7.], &[-2., 3., 4.]]);
+        assert_eq!(u.trace(), 9.0);
+    }
+
+    #[test]
+    fn matrix_trace_negative() {
+        let mut u = Matrix::from(&[&[-2., -8., 4.], &[1., -23., 4.], &[0., 6., 4.]]);
+        assert_eq!(u.trace(), -21.0);
     }
 }

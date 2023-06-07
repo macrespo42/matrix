@@ -125,6 +125,16 @@ fn main() {
             let v = Matrix::from(&[&[0., 1.], &[1., -1.], &[2., 3.]]);
             ex07_with_mat(&mut u, v, "[0., -10.]\n[-3., -1]");
         }
+        8 => {
+            println!("\nExercise 08 - Trace\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+            ex08(&mut u, "2.0");
+            let mut u = Matrix::from(&[&[2., -5., 0.], &[4., 3., 7.], &[-2., 3., 4.]]);
+            ex08(&mut u, "9.0");
+            let mut u = Matrix::from(&[&[-2., -8., 4.], &[1., -23., 4.], &[0., 6., 4.]]);
+            ex08(&mut u, "-21.0");
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -322,5 +332,19 @@ where
     println!("mul_mat {u} with {mat}");
     println!("expected: \n{expected}");
     println!("got: {}", u.mul_mat(mat));
+    println!("-------------------------------------");
+}
+
+fn ex08<K>(u: &mut Matrix<K>, expected: &str)
+where
+    K: Copy,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+{
+    println!("Trace of {u}");
+    println!("expected: {expected}");
+    println!("got: {}", u.trace());
     println!("-------------------------------------");
 }

@@ -20,6 +20,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 05 - Cosine](#ex05)
 - [Exercise 06 - Cross product](#ex06)
 - [Exercise 07 - Linear map, Matrix multiplication](#ex07)
+- [Exercise 08 - Trace](#ex08)
 
 </details>
 
@@ -104,3 +105,17 @@ You must implement functions that compute:
 - *Au* (which returns a vector in R
 m) (max time complexity O(nm), max space complexity O(nm))
 - *AB* (which returns a matrix in Rm×p) (max time complexity O(nmp), max space complexity O(nm + mp + np))
+
+### <a name="ex08"> Exercise 08 - Trace</a>
+
+Maximum time complexity : ***O(n)***  
+Maximum space complexity : ***N/A***  
+
+You must write a function that computes the trace of the given matrix.  
+You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.  
+
+Let A ∈ Kn×n be a square matrix, where K is the real numbers (represented as the type
+f32) and (m, n) ∈ N
+2
+(represented as two variables of type u32).
+The function must compute and return T r(A)
