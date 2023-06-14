@@ -167,10 +167,7 @@ impl<
         result
     }
 
-    pub fn trace(&mut self) -> K
-    where
-        K: std::fmt::Display,
-    {
+    pub fn trace(&mut self) -> K {
         if self.shape() == (0, 0) {
             panic!("Can't trace an empty matrix");
         }
@@ -196,6 +193,68 @@ impl<
             mat_rotated.positions.push(mat_rotated_row);
         }
         mat_rotated
+    }
+
+    fn find_pivot(&mut self, row: usize, column: usize) -> (K, usize)
+    where
+        K: PartialEq + Default,
+    {
+        let zero: K = K::default();
+        for row_index in row..self.row_size() {
+            if self.positions[row_index][column] != zero {
+                return (self.positions[row_index][column], row_index);
+            }
+        }
+        (zero, 0)
+    }
+
+    pub fn row_echelon(&mut self) -> Matrix<K>
+    where
+        K: PartialEq
+            + Default
+            + std::ops::Div<Output = K>
+            + std::ops::Neg<Output = K>
+            + Copy
+            + std::fmt::Display,
+    {
+        let row_echelon_form: Matrix<K> = Matrix::from(&[]);
+        let zero = K::default();
+
+        // find the pivot
+        let row_index: usize = 0;
+        let column_index: usize = 0;
+        let (pivot, pivot_row) = self.find_pivot(row_index, column_index);
+        // swap pivot row to the first row
+        if pivot_row != row_index {
+            self.positions.swap(row_index, pivot_row);
+        }
+        // multiply each element in the pivot row by the inverse of the pivot
+
+        let pivot = pivot.neg() * pivot;
+        let mut scaled_by_reverse_pivot: Vector<K> = Vector::from(&self.positions[row_index]);
+        scaled_by_reverse_pivot.scl(pivot);
+        self.positions[row_index] = scaled_by_reverse_pivot.positions;
+
+        println!("after multiply");
+        println!("{}", self);
+
+        // Add multiples of the pivot row to each of the lower rows, so every element in the pivot column of the lower rows equals 0
+
+        for row in pivot_row..self.row_size() {
+            if self.positions[row][column_index] != zero {
+                let scale: K =
+                    self.positions[row][column_index].neg() * self.positions[row][column_index];
+                let mut scaled_by_reverse_pivot: Vector<K> =
+                    Vector::from(&self.positions[pivot_row]);
+                scaled_by_reverse_pivot.scl(scale);
+                scaled_by_reverse_pivot.add(&Vector::from(&self.positions[row]));
+                self.positions[row] = scaled_by_reverse_pivot.positions;
+            }
+        }
+
+        // increment
+
+        row_echelon_form
     }
 }
 
@@ -353,5 +412,19 @@ mod tests {
         assert_eq!(result.positions[0], Vec::from([1., 4.]));
         assert_eq!(result.positions[1], Vec::from([2., 5.]));
         assert_eq!(result.positions[2], Vec::from([3., 6.]));
+    }
+
+    #[test]
+    fn matrix_rref() {
+        let mut u = Matrix::from(&[&[0, 1, 2], &[1, 2, 1], &[2, 7, 8]]);
+        let result = u.row_echelon();
+        // ref form assert (first step of development remove when rref is implemented)
+        assert_eq!(result.positions[0], Vec::from([1, 2, 1]));
+        assert_eq!(result.positions[1], Vec::from([0, 1, 2]));
+        assert_eq!(result.positions[2], Vec::from([0, 0, 0]));
+        // rref form assert_eq
+        // assert_eq!(result.positions[0], Vec::from([1, 0, 3]));
+        // assert_eq!(result.positions[1], Vec::from([0, 1, 2]));
+        // assert_eq!(result.positions[2], Vec::from([0, 0, 0]));
     }
 }
