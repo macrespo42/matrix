@@ -12,14 +12,14 @@ where
         panic!("Vectors must have the same dimension to be able to compute there cosines");
     }
 
-    if u.positions.len() == 0 || v.positions.len() == 0 {
+    if u.positions.is_empty() || v.positions.is_empty() {
         panic!("One the Vectors are 0");
     }
     let dot_product: K = u.clone().dot(v.clone());
     let u_norm = u.clone().norm();
     let v_norm = v.clone().norm();
 
-    (dot_product.into() / (u_norm * v_norm)) as f32
+    dot_product.into() / (u_norm * v_norm)
 }
 
 #[cfg(test)]

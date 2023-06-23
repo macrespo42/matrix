@@ -29,7 +29,7 @@ where
 
     for column_index in 0..scaled_vectors[0].size() {
         let mut computed_point: K = scaled_vectors[0].positions[0];
-        for row_index in 0..scaled_vectors.len() {
+        for (row_index, _row_value) in scaled_vectors.iter().enumerate() {
             if row_index == 0 {
                 computed_point = scaled_vectors[row_index].positions[column_index];
             } else {
@@ -40,7 +40,7 @@ where
     }
 
     let result: Vector<K> = Vector {
-        positions: Vec::from(linear_combination_result),
+        positions: linear_combination_result,
     };
 
     result

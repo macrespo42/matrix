@@ -300,7 +300,7 @@ where
 {
     println!("cosines of {v} and {u}");
     println!("expected: {expected}");
-    println!("got: {}", angle_cos::<K>(&u, &v));
+    println!("got: {}", angle_cos::<K>(u, v));
 }
 
 fn ex06<K>(u: &Vector<K>, v: &Vector<K>, expected: &str)

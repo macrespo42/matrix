@@ -11,7 +11,7 @@ impl<K: std::ops::Add<Output = K> + Copy> std::ops::Add for Matrix<K> {
 
     fn add(self, other: Matrix<K>) -> Matrix<K> {
         let mut result = self;
-        for (row, &ref other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
+        for (row, other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
             for (column, &other_column) in row.iter_mut().zip(other_row.iter()) {
                 *column = *column + other_column;
             }
@@ -25,7 +25,7 @@ impl<K: std::ops::Sub<Output = K> + Copy> std::ops::Sub for Matrix<K> {
 
     fn sub(self, other: Matrix<K>) -> Matrix<K> {
         let mut result = self;
-        for (row, &ref other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
+        for (row, other_row) in result.positions.iter_mut().zip(other.positions.iter()) {
             for (column, &other_column) in row.iter_mut().zip(other_row.iter()) {
                 *column = *column - other_column;
             }
@@ -100,7 +100,7 @@ impl<
         for (row_index, row) in v.positions.iter().enumerate() {
             for (col_index, column) in row.iter().enumerate() {
                 self.positions[row_index][col_index] =
-                    self.positions[row_index][col_index] + column.clone();
+                    self.positions[row_index][col_index] + *column;
             }
         }
     }
@@ -110,7 +110,7 @@ impl<
         for (row_index, row) in v.positions.iter().enumerate() {
             for (col_index, column) in row.iter().enumerate() {
                 self.positions[row_index][col_index] =
-                    self.positions[row_index][col_index] - column.clone();
+                    self.positions[row_index][col_index] - *column;
             }
         }
     }
@@ -130,7 +130,7 @@ impl<
         let mut result: Vector<K> = Vector::from(&[]);
 
         for row in self.positions.iter() {
-            let row_to_vector: Vector<K> = Vector::from(&row);
+            let row_to_vector: Vector<K> = Vector::from(row);
             result.positions.push(row_to_vector.dot(vec.clone()));
         }
         result
@@ -260,7 +260,7 @@ impl<
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[\n").expect("can't write in stdout");
+        writeln!(f, "[").expect("can't write in stdout");
         for row in self.positions.iter() {
             write!(f, "[").expect("can't write in stdout");
             for (index, point) in row.iter().enumerate() {
@@ -269,7 +269,7 @@ impl<K: fmt::Display> fmt::Display for Matrix<K> {
                     write!(f, ",").expect("can't write in stdout");
                 }
             }
-            write!(f, "]\n").expect("can't write in stdout");
+            writeln!(f, "]").expect("can't write in stdout");
         }
         write!(f, "]")
     }
