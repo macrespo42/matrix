@@ -231,6 +231,36 @@ mod tests {
         let v = Vector::from(&[5., 7.]);
         u.sub(&v);
         assert_eq!(vec![-3.0, -4.0], u.positions);
+
+        let mut u = Vector::from(&[0, 0]);
+        let v = Vector::from(&[0, 0]);
+        u.sub(&v);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[1, 0]);
+        let v = Vector::from(&[0, 1]);
+        u.sub(&v);
+        assert_eq!(vec![1, -1], u.positions);
+
+        let mut u = Vector::from(&[1, 1]);
+        let v = Vector::from(&[1, 1]);
+        u.sub(&v);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[21, 21]);
+        let v = Vector::from(&[21, 21]);
+        u.sub(&v);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[-21, 21]);
+        let v = Vector::from(&[21, -21]);
+        u.sub(&v);
+        assert_eq!(vec![-42, 42], u.positions);
+
+        let mut u = Vector::from(&[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        let v = Vector::from(&[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+        u.sub(&v);
+        assert_eq!(vec![-9, -7, -5, -3, -1, 1, 3, 5, 7, 9], u.positions);
     }
 
     #[test]
