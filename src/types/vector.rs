@@ -101,8 +101,8 @@ impl<
 
     pub fn sub(&mut self, v: &Vector<K>) {
         self.is_same_size(v);
-        for (index, points) in v.positions.iter().enumerate() {
-            self.positions[index] = self.positions[index] - *points;
+        for (index, _points) in v.positions.iter().enumerate() {
+            self.positions[index] = self.positions[index] - v.positions[index];
         }
     }
 
@@ -192,8 +192,37 @@ mod tests {
         let mut u = Vector::from(&[2., 3.]);
         let v = Vector::from(&[5., 7.]);
         u.add(&v);
-        assert_eq!(7.0, u.positions[0]);
-        assert_eq!(10.0, u.positions[1]);
+        assert_eq!(vec![7.0, 10.0], u.positions);
+
+        let mut u = Vector::from(&[0, 0]);
+        let v = Vector::from(&[0, 0]);
+        u.add(&v);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[1, 0]);
+        let v = Vector::from(&[0, 1]);
+        u.add(&v);
+        assert_eq!(vec![1, 1], u.positions);
+
+        let mut u = Vector::from(&[1, 1]);
+        let v = Vector::from(&[1, 1]);
+        u.add(&v);
+        assert_eq!(vec![2, 2], u.positions);
+
+        let mut u = Vector::from(&[21, 21]);
+        let v = Vector::from(&[21, 21]);
+        u.add(&v);
+        assert_eq!(vec![42, 42], u.positions);
+
+        let mut u = Vector::from(&[-21, 21]);
+        let v = Vector::from(&[21, -21]);
+        u.add(&v);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        let v = Vector::from(&[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+        u.add(&v);
+        assert_eq!(vec![9, 9, 9, 9, 9, 9, 9, 9, 9, 9], u.positions);
     }
 
     #[test]
@@ -201,16 +230,14 @@ mod tests {
         let mut u = Vector::from(&[2., 3.]);
         let v = Vector::from(&[5., 7.]);
         u.sub(&v);
-        assert_eq!(-3.0, u.positions[0]);
-        assert_eq!(-4.0, u.positions[1]);
+        assert_eq!(vec![-3.0, -4.0], u.positions);
     }
 
     #[test]
     fn vector_scale() {
         let mut u = Vector::from(&[2., 3.]);
         u.scl(2.);
-        assert_eq!(4.0, u.positions[0]);
-        assert_eq!(6.0, u.positions[1]);
+        assert_eq!(vec![4.0, 6.0], u.positions);
     }
 
     #[test]
