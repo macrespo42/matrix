@@ -54,25 +54,45 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_with_square_vectors() {
+    fn linear_combination_square_vectors() {
         let e1 = Vector::from(&[1., 0., 0.]);
         let e2 = Vector::from(&[0., 1., 0.]);
         let e3 = Vector::from(&[0., 0., 1.]);
 
         let linear_combined = linear_combination::<f32>(&[e1, e2, e3], &[10., -2., 0.5]);
-        assert_eq!(linear_combined.positions[0], 10.);
-        assert_eq!(linear_combined.positions[1], -2.);
-        assert_eq!(linear_combined.positions[2], 0.5);
+        assert_eq!(linear_combined.positions, &[10., -2., 0.5]);
     }
 
     #[test]
-    fn test_with_unsquared_vector() {
+    fn linear_combination_unsquared_vector() {
         let v1 = Vector::from(&[1., 2., 3.]);
         let v2 = Vector::from(&[0., 10., -100.]);
 
         let linear_combined = linear_combination::<f32>(&[v1, v2], &[10., -2.]);
-        assert_eq!(linear_combined.positions[0], 10.);
-        assert_eq!(linear_combined.positions[1], 0.);
-        assert_eq!(linear_combined.positions[2], 230.);
+        assert_eq!(linear_combined.positions, &[10., 0., 230.]);
+    }
+
+    #[test]
+    fn linear_combination_basics() {
+        let v1 = Vector::from(&[-42., 42.]);
+
+        let linear_combined = linear_combination::<f32>(&[v1], &[-1.]);
+        assert_eq!(linear_combined.positions, &[42., -42.]);
+
+        let v1 = Vector::from(&[-42.]);
+        let linear_combined =
+            linear_combination::<f32>(&[v1.clone(), v1.clone(), v1.clone()], &[-1., 1., 0.]);
+        assert_eq!(linear_combined.positions, &[0.]);
+
+        let v1 = Vector::from(&[-42., 42.]);
+        let v2 = Vector::from(&[1., 3.]);
+        let v3 = Vector::from(&[10., 20.]);
+        let linear_combined = linear_combination::<f32>(&[v1, v2, v3], &[1., -10., -1.]);
+        assert_eq!(linear_combined.positions, &[-62., -8.]);
+
+        let v1 = Vector::from(&[-42., 100., -69.5]);
+        let v2 = Vector::from(&[1., 3., 5.]);
+        let linear_combined = linear_combination::<f32>(&[v1, v2], &[1., -10.]);
+        assert_eq!(linear_combined.positions, &[-52., 70., -119.5]);
     }
 }
