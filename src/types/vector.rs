@@ -268,6 +268,26 @@ mod tests {
         let mut u = Vector::from(&[2., 3.]);
         u.scl(2.);
         assert_eq!(vec![4.0, 6.0], u.positions);
+
+        let mut u = Vector::from(&[0, 0]);
+        u.scl(1);
+        assert_eq!(vec![0, 0], u.positions);
+
+        let mut u = Vector::from(&[1, 0]);
+        u.scl(1);
+        assert_eq!(vec![1, 0], u.positions);
+
+        let mut u = Vector::from(&[1, 1]);
+        u.scl(2);
+        assert_eq!(vec![2, 2], u.positions);
+
+        let mut u = Vector::from(&[21, 21]);
+        u.scl(2);
+        assert_eq!(vec![42, 42], u.positions);
+
+        let mut u = Vector::from(&[42., 42.]);
+        u.scl(0.5);
+        assert_eq!(vec![21., 21.], u.positions);
     }
 
     #[test]

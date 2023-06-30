@@ -145,6 +145,26 @@ fn main() {
             let mut u = Matrix::from(&[&[1., 2., 3.], &[4., 5., 6.]]);
             ex09(&mut u, "[1., 4.]\n[2., 5.]\n[3., 6.]");
         }
+        10 => {
+            println!("\nExercise 10 - Reduced row-echelon form");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
+            println!("{}", u.row_echelon());
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+            println!("{}", u.row_echelon());
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1, 2], &[2, 4]]);
+            println!("{}", u.row_echelon());
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[
+                &[8., 5., -2., 4., 28.],
+                &[4., 2.5, 20., 4., -4.],
+                &[8., 5., 1., 4., 17.],
+            ]);
+            println!("{}", u.row_echelon());
+            println!("-------------------------------------");
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -324,6 +344,7 @@ where
     K: std::ops::Sub<K, Output = K>,
     K: std::ops::Mul<K, Output = K>,
     K: std::fmt::Display,
+    K: PartialOrd,
 {
     println!("mul_vec {mat} with {vec}");
     println!("expected: {expected}");
@@ -338,6 +359,7 @@ where
     K: std::ops::Sub<K, Output = K>,
     K: std::ops::Mul<K, Output = K>,
     K: std::fmt::Display,
+    K: PartialOrd,
 {
     println!("mul_mat {u} with {mat}");
     println!("expected: \n{expected}");
@@ -352,6 +374,7 @@ where
     K: std::ops::Sub<K, Output = K>,
     K: std::ops::Mul<K, Output = K>,
     K: std::fmt::Display,
+    K: PartialOrd,
 {
     println!("Trace of {u}");
     println!("expected: {expected}");
@@ -366,6 +389,7 @@ where
     K: std::ops::Sub<K, Output = K>,
     K: std::ops::Mul<K, Output = K>,
     K: std::fmt::Display,
+    K: PartialOrd,
 {
     println!("Transpose of \n {}", u);
     println!("expected: \n{expected}");
