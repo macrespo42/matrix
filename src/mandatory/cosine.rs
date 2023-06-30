@@ -16,8 +16,8 @@ where
         panic!("One the Vectors are 0");
     }
     let dot_product: K = u.clone().dot(v.clone());
-    let u_norm = u.clone().norm();
-    let v_norm = v.clone().norm();
+    let u_norm = u.norm();
+    let v_norm = v.norm();
 
     dot_product.into() / (u_norm * v_norm)
 }
@@ -54,5 +54,24 @@ mod tests {
         let u = Vector::from(&[1., 2., 3.]);
         let v = Vector::from(&[4., 5., 6.]);
         assert_eq!(angle_cos(&u, &v), 0.9746319);
+    }
+
+    #[test]
+    fn angle_cos_complete() {
+        let u = Vector::from(&[8., 7.]);
+        let v = Vector::from(&[3., 2.]);
+        assert_eq!(angle_cos(&u, &v), 0.99145424);
+
+        let u = Vector::from(&[1., 1.]);
+        let v = Vector::from(&[1., 1.]);
+        assert_eq!(angle_cos(&u, &v), 1.0000001);
+
+        let u = Vector::from(&[4., 2.]);
+        let v = Vector::from(&[1., 1.]);
+        assert_eq!(angle_cos(&u, &v), 0.94868326);
+
+        let u = Vector::from(&[-7., 3.]);
+        let v = Vector::from(&[6., 4.]);
+        assert_eq!(angle_cos(&u, &v), -0.54626775);
     }
 }
