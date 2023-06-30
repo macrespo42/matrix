@@ -32,8 +32,10 @@ mod tests {
     #[test]
     fn linear_interpolation_test_with_vectors() {
         let linear_interpoled = lerp(Vector::from(&[2., 1.]), Vector::from(&[4., 2.]), 0.3);
-        assert_eq!(linear_interpoled.positions[0], 2.6);
-        assert_eq!(linear_interpoled.positions[1], 1.3);
+        assert_eq!(linear_interpoled.positions, &[2.6, 1.3]);
+
+        let linear_interpoled = lerp(Vector::from(&[-42., 42.]), Vector::from(&[42., -42.]), 0.5);
+        assert_eq!(linear_interpoled.positions, &[0., 0.]);
     }
 
     #[test]
@@ -45,5 +47,11 @@ mod tests {
         );
         assert_eq!(linear_interpoled.positions[0], Vec::from([11., 5.5]));
         assert_eq!(linear_interpoled.positions[1], Vec::from([16.5, 22.]));
+    }
+
+    #[test]
+    fn linear_interpolation_basics() {
+        assert_eq!(lerp(0., 42., 0.5), 21.);
+        assert_eq!(lerp(-42., 42., 0.5), 0.);
     }
 }
