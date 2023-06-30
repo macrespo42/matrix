@@ -304,6 +304,33 @@ mod tests {
     }
 
     #[test]
+    fn dot_more() {
+        let u = Vector::from(&[0, 0]);
+        let v = Vector::from(&[0, 0]);
+        assert_eq!(0, u.dot(v));
+
+        let u = Vector::from(&[1, 0]);
+        let v = Vector::from(&[0, 0]);
+        assert_eq!(0, u.dot(v));
+
+        let u = Vector::from(&[1, 0]);
+        let v = Vector::from(&[1, 0]);
+        assert_eq!(1, u.dot(v));
+
+        let u = Vector::from(&[1, 0]);
+        let v = Vector::from(&[0, 1]);
+        assert_eq!(0, u.dot(v));
+
+        let u = Vector::from(&[1, 1]);
+        let v = Vector::from(&[1, 1]);
+        assert_eq!(2, u.dot(v));
+
+        let u = Vector::from(&[4, 2]);
+        let v = Vector::from(&[2, 1]);
+        assert_eq!(10, u.dot(v));
+    }
+
+    #[test]
     fn norms_test_basics() {
         let u = Vector::from(&[0., 0., 0.]);
         assert_eq!(u.norm_1(), 0.0);
