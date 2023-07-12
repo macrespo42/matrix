@@ -22,6 +22,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 07 - Linear map, Matrix multiplication](#ex07)
 - [Exercise 08 - Trace](#ex08)
 - [Exercise 09 - Transpose](#ex09)
+- [Exercise 10 - Row echelon form](#ex10)
 
 </details>
 
@@ -132,3 +133,16 @@ compiled (if necessary) and run.
 
 Let A ∈ Km×n where K is the real numbers (represented as the type f32) and (m, n) ∈ N2 (represented as values of the type u32).  
 The function must return the transpose matrix B ∈ Kn×m  
+
+### <a name="ex10"> Exercise 10 - Row-echelon form</a>
+
+Maximum time complexity : ***O(n3)***  
+Maximum space complexity : ***O(n2)***  
+
+You must write a function that computes the row-echelon form of the given
+matrix.  
+You must also turn in a main function in order to test your function, ready to be
+compiled (if necessary) and run.  
+
+Let A ∈ Km×n, where K is the real numbers (represented as the type f32) and (m, n) ∈ N2 (represented as two values of type u32).
+The function must return the row-echelon form of the matrix.
