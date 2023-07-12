@@ -146,7 +146,7 @@ fn main() {
             ex09(&mut u, "[1., 4.]\n[2., 5.]\n[3., 6.]");
         }
         10 => {
-            println!("\nExercise 10 - Reduced row-echelon form");
+            println!("\nExercise 10 - Row-echelon form");
             println!("-------------------------------------");
             let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
             println!("{}", u.row_echelon());

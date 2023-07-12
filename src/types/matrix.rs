@@ -216,7 +216,7 @@ impl<
         (max, max_row)
     }
 
-    pub fn gaussian_elimination(&mut self) -> Matrix<K>
+    pub fn row_echelon(&mut self) -> Matrix<K>
     where
         K: PartialEq
             + Default
@@ -234,10 +234,8 @@ impl<
         while column_index < row_echelon_form.column_size()
             && row_index < row_echelon_form.row_size()
         {
-            // find the pivot
             let (pivot, pivot_row) = row_echelon_form.find_pivot(row_index, column_index);
 
-            // divide all line by pivot
             if pivot != zero {
                 for i in 0..row_echelon_form.column_size() {
                     row_echelon_form.positions[pivot_row][i] =
@@ -245,7 +243,6 @@ impl<
                 }
             }
 
-            // swap pivot row to the first row
             if pivot_row != row_index {
                 row_echelon_form.positions.swap(row_index, pivot_row);
             }
@@ -267,20 +264,6 @@ impl<
             }
             column_index += 1;
         }
-        row_echelon_form
-    }
-
-    pub fn row_echelon(&mut self) -> Matrix<K>
-    where
-        K: PartialEq
-            + Default
-            + std::ops::Div<Output = K>
-            + std::ops::Neg<Output = K>
-            + Copy
-            + std::fmt::Display,
-    {
-        let row_echelon_form: Matrix<K> = self.clone().gaussian_elimination();
-
         row_echelon_form
     }
 }
@@ -506,15 +489,25 @@ mod tests {
     #[test]
     fn matrix_rref() {
         let mut u = Matrix::from(&[&[1, -1, 2], &[3, 2, 1], &[2, -3, -2]]);
-        let result = u.gaussian_elimination();
-        println!("{}", result);
-        // ref form assert (first step of development remove when rref is implemented)
-        // assert_eq!(result.positions[0], Vec::from([1, 0, 0]));
-        // assert_eq!(result.positions[1], Vec::from([0, 1, 0]));
-        // assert_eq!(result.positions[2], Vec::from([0, 0, 1]));
-        // rref form assert_eq
-        // assert_eq!(result.positions[0], Vec::from([1, 0, 3]));
-        // assert_eq!(result.positions[1], Vec::from([0, 1, 2]));
-        // assert_eq!(result.positions[2], Vec::from([0, 0, 0]));
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 0, 0]));
+        assert_eq!(result.positions[1], Vec::from([0, 1, -2]));
+        assert_eq!(result.positions[2], Vec::from([0, 0, 1]));
+
+        let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 0, 0]));
+        assert_eq!(result.positions[1], Vec::from([0, 1, 0]));
+        assert_eq!(result.positions[2], Vec::from([0, 0, 1]));
+
+        let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 1]));
+        assert_eq!(result.positions[1], Vec::from([0, 1]));
+
+        let mut u = Matrix::from(&[&[1, 2], &[2, 4]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 2]));
+        assert_eq!(result.positions[1], Vec::from([0, 0]));
     }
 }
