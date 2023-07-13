@@ -165,6 +165,22 @@ fn main() {
             println!("{}", u.row_echelon());
             println!("-------------------------------------");
         }
+        11 => {
+            println!("\nExercise 11 - Determinant\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+            ex11(&mut u, "-2");
+            let mut u = Matrix::from(&[&[2., 0., 0.], &[0., 2., 0.], &[0., 0., 2.]]);
+            ex11(&mut u, "8");
+            let mut u = Matrix::from(&[
+                &[8., 5., -2., 4.],
+                &[4., 2.5, 20., 4.],
+                &[8., 5., 1., 4.],
+                &[28., -4., 17., 1.],
+            ]);
+            ex11(&mut u, "1032");
+            println!("-------------------------------------");
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
@@ -395,4 +411,19 @@ where
     println!("expected: \n{expected}");
     println!("got: {}", u.transpose());
     println!("-------------------------------------");
+}
+
+fn ex11<K>(u: &mut Matrix<K>, expected: &str)
+where
+    K: Copy,
+    K: std::default::Default,
+    K: std::ops::Add<K, Output = K>,
+    K: std::ops::Sub<K, Output = K>,
+    K: std::ops::Mul<K, Output = K>,
+    K: std::fmt::Display,
+    K: PartialOrd,
+{
+    println!("Determinant of {u}");
+    println!("expected: {expected}");
+    println!("got: {}", u.determinant());
 }
