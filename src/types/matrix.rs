@@ -685,7 +685,7 @@ mod tests {
         assert_eq!(u.determinant(), -171);
 
         let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
-        assert_eq!(u.determinant(), -171);
+        assert_eq!(u.determinant(), 1);
     }
 
     #[test]
