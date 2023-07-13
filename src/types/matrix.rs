@@ -1,7 +1,7 @@
 use crate::Vector;
 use std::fmt;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Matrix<K> {
     pub positions: Vec<Vec<K>>,
 }
@@ -266,6 +266,142 @@ impl<
         }
         row_echelon_form
     }
+
+    fn null_determinant(&mut self) -> bool
+    where
+        K: Default,
+    {
+        false
+    }
+
+    fn determinant_2(&mut self) -> K {
+        return (self.positions[0][0] * self.positions[1][1])
+            - (self.positions[0][1] * self.positions[1][0]);
+    }
+
+    fn determinant_3(&mut self) -> K {
+        let a: K = self.positions[0][0]
+            * Matrix::from(&[
+                &[self.positions[1][1], self.positions[1][2]],
+                &[self.positions[2][1], self.positions[2][2]],
+            ])
+            .determinant_2();
+        let b: K = self.positions[0][1]
+            * Matrix::from(&[
+                &[self.positions[1][0], self.positions[1][2]],
+                &[self.positions[2][0], self.positions[2][2]],
+            ])
+            .determinant_2();
+        let c: K = self.positions[0][2]
+            * Matrix::from(&[
+                &[self.positions[1][0], self.positions[1][1]],
+                &[self.positions[2][0], self.positions[2][1]],
+            ])
+            .determinant_2();
+        return a - b + c;
+    }
+
+    pub fn determinant(&mut self) -> K
+    where
+        K: Default,
+    {
+        if !self.is_square() {
+            panic!("The matrix must be square to compute is determinant");
+        }
+
+        if self.row_size() == 0 || self.column_size() == 0 || self.null_determinant() {
+            return K::default();
+        }
+
+        if self.row_size() == 2 {
+            return self.determinant_2();
+        } else if self.row_size() == 3 {
+            return self.determinant_3();
+        } else if self.row_size() == 4 {
+            let a: K = self.positions[0][0]
+                * Matrix::from(&[
+                    &[
+                        self.positions[1][1],
+                        self.positions[1][2],
+                        self.positions[1][3],
+                    ],
+                    &[
+                        self.positions[2][1],
+                        self.positions[2][2],
+                        self.positions[2][3],
+                    ],
+                    &[
+                        self.positions[3][1],
+                        self.positions[3][2],
+                        self.positions[3][3],
+                    ],
+                ])
+                .determinant_3();
+
+            let b: K = self.positions[0][1]
+                * Matrix::from(&[
+                    &[
+                        self.positions[1][0],
+                        self.positions[1][2],
+                        self.positions[1][3],
+                    ],
+                    &[
+                        self.positions[2][0],
+                        self.positions[2][2],
+                        self.positions[2][3],
+                    ],
+                    &[
+                        self.positions[3][0],
+                        self.positions[3][2],
+                        self.positions[3][3],
+                    ],
+                ])
+                .determinant_3();
+
+            let c: K = self.positions[0][2]
+                * Matrix::from(&[
+                    &[
+                        self.positions[1][0],
+                        self.positions[1][1],
+                        self.positions[1][3],
+                    ],
+                    &[
+                        self.positions[2][0],
+                        self.positions[2][1],
+                        self.positions[2][3],
+                    ],
+                    &[
+                        self.positions[3][0],
+                        self.positions[3][1],
+                        self.positions[3][3],
+                    ],
+                ])
+                .determinant_3();
+
+            let d: K = self.positions[0][3]
+                * Matrix::from(&[
+                    &[
+                        self.positions[1][0],
+                        self.positions[1][1],
+                        self.positions[1][2],
+                    ],
+                    &[
+                        self.positions[2][0],
+                        self.positions[2][1],
+                        self.positions[2][2],
+                    ],
+                    &[
+                        self.positions[3][0],
+                        self.positions[3][1],
+                        self.positions[3][2],
+                    ],
+                ])
+                .determinant_3();
+            return a - b + c - d;
+        } else {
+            panic!("Matrix determinant are available only for matrix of n <= 4");
+        }
+    }
 }
 
 impl<K: fmt::Display> fmt::Display for Matrix<K> {
@@ -287,6 +423,8 @@ impl<K: fmt::Display> fmt::Display for Matrix<K> {
 
 #[cfg(test)]
 mod tests {
+    use std::result;
+
     use super::*;
 
     #[test]
@@ -509,5 +647,71 @@ mod tests {
         let result = u.row_echelon();
         assert_eq!(result.positions[0], Vec::from([1, 2]));
         assert_eq!(result.positions[1], Vec::from([0, 0]));
+    }
+
+    #[test]
+    fn matrix_determinant_2() {
+        let mut u = Matrix::from(&[&[1., -1.], &[-1., 1.]]);
+        assert_eq!(u.determinant(), 0.);
+
+        let mut u = Matrix::from(&[&[0, 0], &[0, 0]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 0], &[0, 1]]);
+        assert_eq!(u.determinant(), 1);
+
+        let mut u = Matrix::from(&[&[2, 0], &[0, 2]]);
+        assert_eq!(u.determinant(), 4);
+
+        let mut u = Matrix::from(&[&[1, 1], &[1, 1]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[0, 1], &[1, 0]]);
+        assert_eq!(u.determinant(), -1);
+
+        let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+        assert_eq!(u.determinant(), -2);
+
+        let mut u = Matrix::from(&[&[-7, 5], &[4, 6]]);
+        assert_eq!(u.determinant(), -62);
+    }
+
+    #[test]
+    fn matrix_determinant_3() {
+        let mut u = Matrix::from(&[&[2., 0., 0.], &[0., 2., 0.], &[0., 0., 2.]]);
+        assert_eq!(u.determinant(), 8.);
+
+        let mut u = Matrix::from(&[&[4, 2, 5], &[1, 8, 9], &[2, 7, 3]]);
+        assert_eq!(u.determinant(), -171);
+
+        let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
+        assert_eq!(u.determinant(), -171);
+    }
+
+    #[test]
+    fn matrix_determinant_4() {
+        let mut u = Matrix::from(&[
+            &[8., 5., -2., 4.],
+            &[4., 2.5, 20., 4.],
+            &[8., 5., 1., 4.],
+            &[28., -4., 17., 1.],
+        ]);
+
+        assert_eq!(u.determinant(), 1032.);
+
+        let mut u = Matrix::from(&[
+            &[1, 1, 1, -1],
+            &[1, 1, -1, 1],
+            &[1, -1, 1, 1],
+            &[-1, 1, 1, 1],
+        ]);
+
+        assert_eq!(u.determinant(), -16);
+    }
+
+    #[test]
+    fn matrix_determinant_0() {
+        let mut u = Matrix::from(&[&[1, 4, 2], &[1, 4, 2], &[3, 9, 5]]);
+        assert_eq!(u.determinant(), 0);
     }
 }
