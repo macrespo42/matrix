@@ -23,6 +23,7 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 08 - Trace](#ex08)
 - [Exercise 09 - Transpose](#ex09)
 - [Exercise 10 - Row echelon form](#ex10)
+- [Exercise 11 - Determinant](#ex11)
 
 </details>
 
@@ -146,3 +147,18 @@ compiled (if necessary) and run.
 
 Let A ∈ Km×n, where K is the real numbers (represented as the type f32) and (m, n) ∈ N2 (represented as two values of type u32).
 The function must return the row-echelon form of the matrix.
+
+### <a name="ex11"> Exercise 11 - Determinant</a>
+
+Maximum time complexity : ***O(n3)***  
+Maximum space complexity : ***O(n2)***  
+
+You must write a function that computes the determinant of the given matrix.  
+You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.  
+
+Let A ∈ Kn×n where K is the real numbers (represented as the type f32) and n ∈ N and n ≤ 4 (represented as a value of the type u32).  
+The function must return the determinant det(A) of the matrix.  
+If the matrix is not square, the behaviour is undefined.  
+Since algorithms to compute the determinant fast and accurately for higher dimensions  
+tend to be pretty complex, we have limited the required cases for which you must compute  
+the determinant to dimensions 4 and below.  
