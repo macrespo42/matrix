@@ -267,13 +267,6 @@ impl<
         row_echelon_form
     }
 
-    fn null_determinant(&mut self) -> bool
-    where
-        K: Default,
-    {
-        false
-    }
-
     fn determinant_2(&mut self) -> K {
         return (self.positions[0][0] * self.positions[1][1])
             - (self.positions[0][1] * self.positions[1][0]);
@@ -301,6 +294,116 @@ impl<
         return a - b + c;
     }
 
+    fn determinant_4(&mut self) -> K {
+        let a: K = self.positions[0][0]
+            * Matrix::from(&[
+                &[
+                    self.positions[1][1],
+                    self.positions[1][2],
+                    self.positions[1][3],
+                ],
+                &[
+                    self.positions[2][1],
+                    self.positions[2][2],
+                    self.positions[2][3],
+                ],
+                &[
+                    self.positions[3][1],
+                    self.positions[3][2],
+                    self.positions[3][3],
+                ],
+            ])
+            .determinant_3();
+
+        let b: K = self.positions[0][1]
+            * Matrix::from(&[
+                &[
+                    self.positions[1][0],
+                    self.positions[1][2],
+                    self.positions[1][3],
+                ],
+                &[
+                    self.positions[2][0],
+                    self.positions[2][2],
+                    self.positions[2][3],
+                ],
+                &[
+                    self.positions[3][0],
+                    self.positions[3][2],
+                    self.positions[3][3],
+                ],
+            ])
+            .determinant_3();
+
+        let c: K = self.positions[0][2]
+            * Matrix::from(&[
+                &[
+                    self.positions[1][0],
+                    self.positions[1][1],
+                    self.positions[1][3],
+                ],
+                &[
+                    self.positions[2][0],
+                    self.positions[2][1],
+                    self.positions[2][3],
+                ],
+                &[
+                    self.positions[3][0],
+                    self.positions[3][1],
+                    self.positions[3][3],
+                ],
+            ])
+            .determinant_3();
+
+        let d: K = self.positions[0][3]
+            * Matrix::from(&[
+                &[
+                    self.positions[1][0],
+                    self.positions[1][1],
+                    self.positions[1][2],
+                ],
+                &[
+                    self.positions[2][0],
+                    self.positions[2][1],
+                    self.positions[2][2],
+                ],
+                &[
+                    self.positions[3][0],
+                    self.positions[3][1],
+                    self.positions[3][2],
+                ],
+            ])
+            .determinant_3();
+        return a - b + c - d;
+    }
+
+    // fn null_determinant(&mut self) -> bool
+    // where
+    //     K: Default,
+    // {
+    //     for (index, row) in self.positions.iter().enumerate() {
+    //         let first = self.positions[index][0];
+    //         // check if a row is filled with zero
+    //         if row
+    //             .iter()
+    //             .all(|&item| item == first && item == K::default())
+    //         {
+    //             return true;
+    //         }
+    //         // check if row in double
+    //         for row_index in index..self.row_size() {
+    //             if row_index != index && self.positions[row_index] == *row {
+    //                 return true;
+    //             }
+    //             // check if row proportional
+    //         }
+    //     }
+    //     //columns in double
+    //     //if columns proportional
+    //     //if a column is filled is zero
+    //     false
+    // }
+
     pub fn determinant(&mut self) -> K
     where
         K: Default,
@@ -309,7 +412,7 @@ impl<
             panic!("The matrix must be square to compute is determinant");
         }
 
-        if self.row_size() == 0 || self.column_size() == 0 || self.null_determinant() {
+        if self.row_size() == 0 || self.column_size() == 0 {
             return K::default();
         }
 
@@ -318,86 +421,7 @@ impl<
         } else if self.row_size() == 3 {
             return self.determinant_3();
         } else if self.row_size() == 4 {
-            let a: K = self.positions[0][0]
-                * Matrix::from(&[
-                    &[
-                        self.positions[1][1],
-                        self.positions[1][2],
-                        self.positions[1][3],
-                    ],
-                    &[
-                        self.positions[2][1],
-                        self.positions[2][2],
-                        self.positions[2][3],
-                    ],
-                    &[
-                        self.positions[3][1],
-                        self.positions[3][2],
-                        self.positions[3][3],
-                    ],
-                ])
-                .determinant_3();
-
-            let b: K = self.positions[0][1]
-                * Matrix::from(&[
-                    &[
-                        self.positions[1][0],
-                        self.positions[1][2],
-                        self.positions[1][3],
-                    ],
-                    &[
-                        self.positions[2][0],
-                        self.positions[2][2],
-                        self.positions[2][3],
-                    ],
-                    &[
-                        self.positions[3][0],
-                        self.positions[3][2],
-                        self.positions[3][3],
-                    ],
-                ])
-                .determinant_3();
-
-            let c: K = self.positions[0][2]
-                * Matrix::from(&[
-                    &[
-                        self.positions[1][0],
-                        self.positions[1][1],
-                        self.positions[1][3],
-                    ],
-                    &[
-                        self.positions[2][0],
-                        self.positions[2][1],
-                        self.positions[2][3],
-                    ],
-                    &[
-                        self.positions[3][0],
-                        self.positions[3][1],
-                        self.positions[3][3],
-                    ],
-                ])
-                .determinant_3();
-
-            let d: K = self.positions[0][3]
-                * Matrix::from(&[
-                    &[
-                        self.positions[1][0],
-                        self.positions[1][1],
-                        self.positions[1][2],
-                    ],
-                    &[
-                        self.positions[2][0],
-                        self.positions[2][1],
-                        self.positions[2][2],
-                    ],
-                    &[
-                        self.positions[3][0],
-                        self.positions[3][1],
-                        self.positions[3][2],
-                    ],
-                ])
-                .determinant_3();
-            return a - b + c - d;
+            return self.determinant_4();
         } else {
             panic!("Matrix determinant are available only for matrix of n <= 4");
         }
@@ -423,8 +447,6 @@ impl<K: fmt::Display> fmt::Display for Matrix<K> {
 
 #[cfg(test)]
 mod tests {
-    use std::result;
-
     use super::*;
 
     #[test]
@@ -712,6 +734,18 @@ mod tests {
     #[test]
     fn matrix_determinant_0() {
         let mut u = Matrix::from(&[&[1, 4, 2], &[1, 4, 2], &[3, 9, 5]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 4, 2], &[0, 0, 0], &[3, 9, 5]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 4, 2], &[3, 9, 5], &[3, 9, 5]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 4, 2], &[2, 8, 4], &[3, 9, 5]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[4, 4, 2], &[2, 8, 1], &[6, 12, 3]]);
         assert_eq!(u.determinant(), 0);
     }
 }
