@@ -260,8 +260,8 @@ impl<
     }
 
     fn determinant_2(&mut self) -> K {
-        return (self.positions[0][0] * self.positions[1][1])
-            - (self.positions[0][1] * self.positions[1][0]);
+        (self.positions[0][0] * self.positions[1][1])
+            - (self.positions[0][1] * self.positions[1][0])
     }
 
     fn determinant_3(&mut self) -> K {
@@ -283,7 +283,7 @@ impl<
                 &[self.positions[2][0], self.positions[2][1]],
             ])
             .determinant_2();
-        return a - b + c;
+        a - b + c
     }
 
     fn determinant_4(&mut self) -> K {
@@ -366,7 +366,7 @@ impl<
                 ],
             ])
             .determinant_3();
-        return a - b + c - d;
+        a - b + c - d
     }
 
     pub fn determinant(&mut self) -> K
@@ -385,7 +385,7 @@ impl<
             return self.positions[0][0];
         }
         if self.row_size() == 2 {
-            return self.determinant_2();
+            self.determinant_2()
         } else if self.row_size() == 3 {
             return self.determinant_3();
         } else if self.row_size() == 4 {
