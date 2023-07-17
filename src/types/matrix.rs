@@ -72,14 +72,6 @@ impl<
         self.positions.len() == self.positions[0].len()
     }
 
-    pub fn reshape_to_vector(&self) -> Vec<K> {
-        let mut returned_vector: Vec<K> = Vec::new();
-        for row in self.positions.iter() {
-            returned_vector.extend(row.clone());
-        }
-        returned_vector
-    }
-
     pub fn from(matrix: &[&[K]]) -> Self {
         let mut positions = Vec::with_capacity(matrix.len());
         for row in matrix {
@@ -377,33 +369,6 @@ impl<
         return a - b + c - d;
     }
 
-    // fn null_determinant(&mut self) -> bool
-    // where
-    //     K: Default,
-    // {
-    //     for (index, row) in self.positions.iter().enumerate() {
-    //         let first = self.positions[index][0];
-    //         // check if a row is filled with zero
-    //         if row
-    //             .iter()
-    //             .all(|&item| item == first && item == K::default())
-    //         {
-    //             return true;
-    //         }
-    //         // check if row in double
-    //         for row_index in index..self.row_size() {
-    //             if row_index != index && self.positions[row_index] == *row {
-    //                 return true;
-    //             }
-    //             // check if row proportional
-    //         }
-    //     }
-    //     //columns in double
-    //     //if columns proportional
-    //     //if a column is filled is zero
-    //     false
-    // }
-
     pub fn determinant(&mut self) -> K
     where
         K: Default,
@@ -416,6 +381,9 @@ impl<
             return K::default();
         }
 
+        if self.row_size() == 1 && self.column_size() == 1 {
+            return self.positions[0][0];
+        }
         if self.row_size() == 2 {
             return self.determinant_2();
         } else if self.row_size() == 3 {
@@ -423,8 +391,21 @@ impl<
         } else if self.row_size() == 4 {
             return self.determinant_4();
         } else {
-            panic!("Matrix determinant are available only for matrix of n <= 4");
+            panic!("Matrix determinant are available only for matrix of n <= 4 && n >= 2");
         }
+    }
+
+    pub fn inverse(&mut self) -> Result<Matrix<K>, String>
+    where
+        K: Default,
+    {
+        if self.is_square() {
+            return Err(String::from("Matrix is not square"));
+        }
+        if self.determinant() == K::default() {
+            return Err(String::from("Matrix is singular"));
+        }
+        Ok(Matrix::from(&[&[]]))
     }
 }
 

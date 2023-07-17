@@ -181,6 +181,19 @@ fn main() {
             ex11(&mut u, "1032");
             println!("-------------------------------------");
         }
+        12 => {
+            println!("\nExercise 12 - Inverse\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+            match u.inverse() {
+                Ok(m) => {
+                    println!("{m:?}");
+                }
+                Err(m) => {
+                    println!("{m:?}");
+                }
+            }
+        }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
 }
