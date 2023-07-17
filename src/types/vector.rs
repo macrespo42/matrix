@@ -165,8 +165,6 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
 
 #[cfg(test)]
 mod tests {
-    use std::assert_eq;
-
     use super::*;
 
     #[test]

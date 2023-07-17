@@ -134,11 +134,6 @@ impl<
 
     pub fn mul_mat(&mut self, mat: Matrix<K>) -> Matrix<K> {
         if self.row_size() != mat.column_size() {
-            println!(
-                "self row: {} | mat column: {}",
-                self.row_size(),
-                mat.column_size()
-            );
             panic!("The number of columns in this Matrix must equals the number of rows in mat");
         }
         let mut mat_rotated: Matrix<K> = Matrix::from(&[]);
@@ -394,15 +389,30 @@ impl<
             panic!("Matrix determinant are available only for matrix of n <= 4 && n >= 2");
         }
     }
+}
 
-    pub fn inverse(&mut self) -> Result<Matrix<K>, String>
-    where
-        K: Default,
-    {
+impl Matrix<f32> {
+    fn identity_matrix(&mut self) -> Matrix<f32> {
+        let mut result: Matrix<f32> = Matrix::from(&[]);
+        for (row_index, row) in self.positions.iter().enumerate() {
+            let mut result_row = vec![];
+            for (column_index, _column) in row.iter().enumerate() {
+                if column_index == row_index {
+                    result_row.push(1.);
+                } else {
+                    result_row.push(0.);
+                }
+            }
+            result.positions.push(result_row);
+        }
+        result
+    }
+
+    pub fn inverse(&mut self) -> Result<Matrix<f32>, String> {
         if self.is_square() {
             return Err(String::from("Matrix is not square"));
         }
-        if self.determinant() == K::default() {
+        if self.determinant() == 0. {
             return Err(String::from("Matrix is singular"));
         }
         Ok(Matrix::from(&[&[]]))
@@ -737,5 +747,31 @@ mod tests {
 
         let mut u = Matrix::from(&[&[1, 2], &[0, 0]]);
         assert_eq!(u.determinant(), 0);
+    }
+
+    #[test]
+    fn indentity_matrix_basics() {
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        let result = u.identity_matrix();
+        assert_eq!(result.positions[0], vec![1., 0.]);
+        assert_eq!(result.positions[1], vec![0., 1.]);
+
+        let mut u = Matrix::from(&[&[1., 2., 3.], &[4., 5., 6.], &[7., 8., 9.]]);
+        let result = u.identity_matrix();
+        assert_eq!(result.positions[0], vec![1., 0., 0.]);
+        assert_eq!(result.positions[1], vec![0., 1., 0.]);
+        assert_eq!(result.positions[2], vec![0., 0., 1.]);
+
+        let mut u = Matrix::from(&[
+            &[1., 2., 3., 4.],
+            &[5., 6., 7., 8.],
+            &[8., 9., 10., 11.],
+            &[12., 13., 14., 15.],
+        ]);
+        let result = u.identity_matrix();
+        assert_eq!(result.positions[0], vec![1., 0., 0., 0.]);
+        assert_eq!(result.positions[1], vec![0., 1., 0., 0.]);
+        assert_eq!(result.positions[2], vec![0., 0., 1., 0.]);
+        assert_eq!(result.positions[3], vec![0., 0., 0., 1.]);
     }
 }
