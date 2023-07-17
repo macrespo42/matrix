@@ -747,5 +747,14 @@ mod tests {
 
         let mut u = Matrix::from(&[&[4, 4, 2], &[2, 8, 1], &[6, 12, 3]]);
         assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[4, 4], &[4, 4]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 2], &[2, 4]]);
+        assert_eq!(u.determinant(), 0);
+
+        let mut u = Matrix::from(&[&[1, 2], &[0, 0]]);
+        assert_eq!(u.determinant(), 0);
     }
 }
