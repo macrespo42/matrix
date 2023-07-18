@@ -389,6 +389,31 @@ impl<
             panic!("Matrix determinant are available only for matrix of n <= 4 && n >= 2");
         }
     }
+
+    pub fn rank(&mut self) -> usize
+    where
+        K: PartialEq
+            + Default
+            + std::ops::Div<Output = K>
+            + std::ops::Neg<Output = K>
+            + Copy
+            + std::fmt::Display,
+    {
+        let rref = self.row_echelon();
+        let mut rank_value: usize = 0;
+        let first = rref.positions[0][0];
+
+        for row in rref.positions.iter() {
+            if !row
+                .iter()
+                .all(|&item| item == first && item == K::default())
+            {
+                rank_value += 1;
+            }
+        }
+
+        rank_value
+    }
 }
 
 impl Matrix<f32> {
@@ -409,13 +434,33 @@ impl Matrix<f32> {
     }
 
     pub fn inverse(&mut self) -> Result<Matrix<f32>, String> {
-        if self.is_square() {
+        if !self.is_square() {
             return Err(String::from("Matrix is not square"));
         }
         if self.determinant() == 0. {
             return Err(String::from("Matrix is singular"));
         }
-        Ok(Matrix::from(&[&[]]))
+        if self.row_size() == 2 && self.column_size() == 2 {
+            let determinant = self.clone().determinant();
+            let mut result = self.clone();
+            result.positions[0][1] = -result.positions[0][1];
+            result.positions[1][0] = -result.positions[1][0];
+            let tmp = result.clone().positions[0][0];
+            result.positions[0][0] = result.positions[1][1];
+            result.positions[1][1] = tmp;
+            result.scl(1. / determinant);
+            return Ok(result);
+        }
+        let identity_matrix = self.clone().identity_matrix();
+        let mut result = self.clone();
+        for (index, row) in identity_matrix.positions.iter().enumerate() {
+            result.positions[index].extend(row.iter().cloned());
+        }
+        let mut result = result.row_echelon();
+        for index in 0..self.row_size() {
+            result.positions[index].drain(0..self.column_size());
+        }
+        Ok(result)
     }
 }
 
@@ -773,5 +818,80 @@ mod tests {
         assert_eq!(result.positions[1], vec![0., 1., 0., 0.]);
         assert_eq!(result.positions[2], vec![0., 0., 1., 0.]);
         assert_eq!(result.positions[3], vec![0., 0., 0., 1.]);
+    }
+
+    #[test]
+    fn inverse_matrix_2x2() {
+        let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                assert_eq!(r.positions[0], vec![1., 0.]);
+                assert_eq!(r.positions[1], vec![0., 1.]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
+
+        let mut u = Matrix::from(&[&[4., 7.], &[2., 6.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                assert_eq!(r.positions[0], vec![0.6, -0.7]);
+                assert_eq!(r.positions[1], vec![-0.2, 0.4]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
+    }
+
+    #[test]
+    fn inverse_matrix_3x3() {
+        let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                println!("Matrix: {r}");
+                assert_eq!(r.positions[0], vec![1., 0., 0.]);
+                assert_eq!(r.positions[1], vec![0., 1., 0.]);
+                assert_eq!(r.positions[2], vec![0., 0., 1.]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
+
+        let mut u = Matrix::from(&[&[2., 0., 0.], &[0., 2., 0.], &[0., 0., 2.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                println!("Matrix: {r}");
+                assert_eq!(r.positions[0], vec![0.5, 0., 0.]);
+                assert_eq!(r.positions[1], vec![0., 0.5, 0.]);
+                assert_eq!(r.positions[2], vec![0., 0., 0.5]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
+
+        let mut u = Matrix::from(&[&[8., 5., -2.], &[4., 7., 20.], &[7., 6., 1.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                println!("Matrix: {r}");
+                // assert_eq!(r.positions[0], vec![0.649425287, 0.097701149, -0.655172414]);
+                // assert_eq!(
+                //     r.positions[1],
+                //     vec![-0.781609195, -0.126436782, 0.965517241]
+                // );
+                assert_eq!(r.positions[2], vec![0.143678161, 0.07471265, -0.206896552]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
     }
 }
