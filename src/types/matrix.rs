@@ -393,24 +393,26 @@ impl<
     pub fn rank(&mut self) -> usize
     where
         K: PartialEq
+            + Copy
             + Default
             + std::ops::Div<Output = K>
             + std::ops::Neg<Output = K>
-            + Copy
             + std::fmt::Display,
     {
         let rref = self.row_echelon();
         let mut rank_value: usize = 0;
-        let first = rref.positions[0][0];
+        let mut first = rref.positions[0][0];
 
-        for row in rref.positions.iter() {
+        for (row_index, row) in rref.positions.iter().enumerate() {
             if !row
                 .iter()
                 .all(|&item| item == first && item == K::default())
             {
                 rank_value += 1;
             }
+            first = rref.positions[row_index][0];
         }
+        println!("RREF: {rref}");
 
         rank_value
     }
@@ -893,5 +895,22 @@ mod tests {
                 assert_eq!(0, 1);
             }
         }
+    }
+
+    #[test]
+    fn matrix_rank() {
+        let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+        assert_eq!(u.rank(), 3);
+
+        let mut u = Matrix::from(&[&[1, 2, 0, 0], &[2, 4, 0, 0], &[-1, 2, 1, 1]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[
+            &[8., 5., -2.],
+            &[4., 7., 20.],
+            &[7., 6., 1.],
+            &[21., 18., 7.],
+        ]);
+        assert_eq!(u.rank(), 3);
     }
 }
