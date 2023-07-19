@@ -191,11 +191,15 @@ impl<
         K: PartialEq + Default,
     {
         let zero: K = K::default();
-        let mut max: K = self.positions[row][column];
+        let mut max: K = zero;
         let mut max_row: usize = row;
         for row_index in row..self.row_size() {
-            if self.positions[row_index][column] != zero && self.positions[row_index][column] > max
-            {
+            // pass two variable to absolute
+            let mut point = self.positions[row_index][column];
+            if point < zero {
+                point = point * point;
+            }
+            if self.positions[row_index][column] != zero && point > max {
                 max = self.positions[row_index][column];
                 max_row = row_index;
             }
@@ -205,12 +209,12 @@ impl<
 
     pub fn row_echelon(&mut self) -> Matrix<K>
     where
-        K: PartialEq
+        K: Copy
+            + PartialEq
             + Default
             + std::ops::Div<Output = K>
             + std::ops::Neg<Output = K>
-            + Copy
-            + std::fmt::Display,
+            + std::fmt::Display, // TODO delete after debugging
     {
         let mut row_echelon_form: Matrix<K> = self.clone();
         let zero = K::default();
@@ -218,10 +222,9 @@ impl<
         let mut row_index: usize = 0;
         let mut column_index: usize = 0;
 
-        while column_index < row_echelon_form.column_size()
-            && row_index < row_echelon_form.row_size()
-        {
-            let (pivot, pivot_row) = row_echelon_form.find_pivot(row_index, column_index);
+        while column_index < row_echelon_form.column_size() {
+            let (pivot, pivot_row) = row_echelon_form.clone().find_pivot(row_index, column_index);
+            println!("pivot: {pivot}");
 
             if pivot != zero {
                 for i in 0..row_echelon_form.column_size() {
@@ -233,22 +236,24 @@ impl<
             if pivot_row != row_index {
                 row_echelon_form.positions.swap(row_index, pivot_row);
             }
+            // TODO Work ATM
 
-            row_index += 1;
+            let mut row_below_pivot_index = row_index + 1;
 
-            for scaled_row_index in row_index..row_echelon_form.row_size() {
-                let mut scaled_pivot: Vector<K> =
-                    Vector::from(&row_echelon_form.clone().positions[row_index - 1]);
-
-                scaled_pivot
-                    .scl(row_echelon_form.clone().positions[scaled_row_index][column_index]);
-
+            while row_below_pivot_index < row_echelon_form.row_size() {
                 let mut scaled_row: Vector<K> =
-                    Vector::from(&row_echelon_form.clone().positions[scaled_row_index]);
-                scaled_row.sub(&scaled_pivot.clone());
+                    Vector::from(&row_echelon_form.clone().positions[row_index]);
+                scaled_row.scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
 
-                row_echelon_form.positions[scaled_row_index] = scaled_row.clone().positions;
+                let mut row_below_pivot =
+                    Vector::from(&row_echelon_form.clone().positions[row_below_pivot_index]);
+                row_below_pivot.sub(&scaled_row);
+
+                row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
+                row_below_pivot_index += 1;
             }
+            println!("matrix after operation: {row_echelon_form}");
+            row_index += 1;
             column_index += 1;
         }
         row_echelon_form
@@ -689,7 +694,7 @@ mod tests {
         let mut u = Matrix::from(&[&[1, -1, 2], &[3, 2, 1], &[2, -3, -2]]);
         let result = u.row_echelon();
         assert_eq!(result.positions[0], Vec::from([1, 0, 0]));
-        assert_eq!(result.positions[1], Vec::from([0, 1, -2]));
+        assert_eq!(result.positions[1], Vec::from([0, 1, 0]));
         assert_eq!(result.positions[2], Vec::from([0, 0, 1]));
 
         let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
