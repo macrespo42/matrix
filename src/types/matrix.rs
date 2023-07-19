@@ -188,20 +188,22 @@ impl<
 
     fn find_pivot(&mut self, row: usize, column: usize) -> (K, usize)
     where
-        K: PartialEq + Default,
+        K: PartialEq + Default + std::fmt::Display + std::ops::Neg<Output = K> + PartialOrd,
     {
         let zero: K = K::default();
-        let mut max: K = zero;
+        let mut max: K = self.positions[row][column];
+        let mut max_abs: K = if max < zero { -max } else { max };
         let mut max_row: usize = row;
+
         for row_index in row..self.row_size() {
-            // pass two variable to absolute
             let mut point = self.positions[row_index][column];
             if point < zero {
-                point = point * point;
+                point = -point;
             }
-            if self.positions[row_index][column] != zero && point > max {
+            if self.positions[row_index][column] != zero && point > max_abs {
                 max = self.positions[row_index][column];
                 max_row = row_index;
+                max_abs = if max < zero { -max } else { max };
             }
         }
         (max, max_row)
@@ -224,7 +226,6 @@ impl<
 
         while column_index < row_echelon_form.column_size() {
             let (pivot, pivot_row) = row_echelon_form.clone().find_pivot(row_index, column_index);
-            println!("pivot: {pivot}");
 
             if pivot != zero {
                 for i in 0..row_echelon_form.column_size() {
@@ -232,11 +233,12 @@ impl<
                         row_echelon_form.positions[pivot_row][i] / pivot;
                 }
             }
+            // println!("Matrix after divided by herself: {row_echelon_form}");
 
             if pivot_row != row_index {
                 row_echelon_form.positions.swap(row_index, pivot_row);
             }
-            // TODO Work ATM
+            // // TODO Work ATM
 
             let mut row_below_pivot_index = row_index + 1;
 
@@ -252,7 +254,7 @@ impl<
                 row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
                 row_below_pivot_index += 1;
             }
-            println!("matrix after operation: {row_echelon_form}");
+            // println!("matrix after operation: {row_echelon_form}");
             row_index += 1;
             column_index += 1;
         }
@@ -417,8 +419,6 @@ impl<
             }
             first = rref.positions[row_index][0];
         }
-        println!("RREF: {rref}");
-
         rank_value
     }
 }
@@ -709,6 +709,34 @@ mod tests {
         assert_eq!(result.positions[1], Vec::from([0, 1]));
 
         let mut u = Matrix::from(&[&[1, 2], &[2, 4]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 2]));
+        assert_eq!(result.positions[1], Vec::from([0, 0]));
+    }
+
+    #[test]
+    fn matrix_rref_edge_cases() {
+        let mut u = Matrix::from(&[&[0, 0], &[0, 0]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([0, 0]));
+        assert_eq!(result.positions[1], Vec::from([0, 0]));
+
+        let mut u = Matrix::from(&[&[1, 0], &[0, 1]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 0]));
+        assert_eq!(result.positions[1], Vec::from([0, 1]));
+
+        let mut u = Matrix::from(&[&[4., 2.], &[2., 1.]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1., 0.5]));
+        assert_eq!(result.positions[1], Vec::from([0., 0.]));
+
+        let mut u = Matrix::from(&[&[-7, 2], &[4, 8]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1, 0]));
+        assert_eq!(result.positions[1], Vec::from([0, 1]));
+
+        let mut u = Matrix::from(&[&[1, 2], &[4, 8]]);
         let result = u.row_echelon();
         assert_eq!(result.positions[0], Vec::from([1, 2]));
         assert_eq!(result.positions[1], Vec::from([0, 0]));
