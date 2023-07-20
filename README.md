@@ -24,6 +24,8 @@ And you can run a little CLI programm to show test output with `cargo run`
 - [Exercise 09 - Transpose](#ex09)
 - [Exercise 10 - Row echelon form](#ex10)
 - [Exercise 11 - Determinant](#ex11)
+- [Exercise 12 - Inverse](#ex12)
+- [Exercise 13 - Rank](#ex13)
 
 </details>
 
@@ -162,3 +164,28 @@ If the matrix is not square, the behaviour is undefined.
 Since algorithms to compute the determinant fast and accurately for higher dimensions  
 tend to be pretty complex, we have limited the required cases for which you must compute  
 the determinant to dimensions 4 and below.  
+
+### <a name="ex12"> Exercise 12 - Inverse</a>
+
+Maximum time complexity : ***O(n3)***  
+Maximum space complexity : ***O(n2)***  
+
+You must write a function that computes the inverse matrix of a given matrix.
+You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.  
+Let A ∈ Kn×n where K is the real numbers (represented as the type f32) and n ∈ N (represented as a value of the type u32).  
+The function must return the inverse matrix A−1 ∈ Kn×n
+such that A−1A = In, where
+In is the identity matrix.
+If the matrix is singular, the function should return an error.
+If the matrix is not square, the behaviour is undefined.
+
+### <a name="ex13"> Exercise 13 - Rank</a>
+
+Maximum time complexity : ***O(n3)***  
+Maximum space complexity : ***N/A***  
+
+You must write a function that computes the rank of a matrix.  
+You must also turn in a main function in order to test your function, ready to be compiled (if necessary) and run.  
+
+Let A ∈ Kn×m where K is the real numbers (represented as the type f32) and (m, n) ∈ N2 (represented as two values of type u32).  
+The function must return the rank of the matrix: rank(A)  

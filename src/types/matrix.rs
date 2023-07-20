@@ -259,6 +259,7 @@ impl<
             row_index += 1;
             column_index += 1;
         }
+        println!("{row_echelon_form}");
         row_echelon_form
     }
 
@@ -1025,5 +1026,8 @@ mod tests {
 
         let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
         assert_eq!(u.rank(), 3);
+
+        let mut u = Matrix::from(&[&[1, 2, 3], &[4, 5, 6], &[7, 8, 9]]);
+        assert_eq!(u.rank(), 2);
     }
 }
