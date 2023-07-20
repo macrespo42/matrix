@@ -140,7 +140,7 @@ impl<
         for column in 0..mat.column_size() {
             let mut mat_rotated_row: Vec<K> = Vec::new();
             for row in 0..mat.row_size() {
-                mat_rotated_row.push(mat.clone().positions[row][column]);
+                mat_rotated_row.push(mat.positions[row][column]);
             }
             mat_rotated.positions.push(mat_rotated_row);
         }
@@ -179,7 +179,7 @@ impl<
         for column in 0..self.column_size() {
             let mut mat_rotated_row: Vec<K> = Vec::new();
             for row in 0..self.row_size() {
-                mat_rotated_row.push(self.clone().positions[row][column]);
+                mat_rotated_row.push(self.positions[row][column]);
             }
             mat_rotated.positions.push(mat_rotated_row);
         }
@@ -245,11 +245,11 @@ impl<
             while row_below_pivot_index < row_echelon_form.row_size() {
                 if row_below_pivot_index != row_index {
                     let mut scaled_row: Vector<K> =
-                        Vector::from(&row_echelon_form.clone().positions[row_index]);
+                        Vector::from(&row_echelon_form.positions[row_index]);
                     scaled_row.scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
 
                     let mut row_below_pivot =
-                        Vector::from(&row_echelon_form.clone().positions[row_below_pivot_index]);
+                        Vector::from(&row_echelon_form.positions[row_below_pivot_index]);
                     row_below_pivot.sub(&scaled_row);
 
                     row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
@@ -443,18 +443,18 @@ impl Matrix<f32> {
             return Err(String::from("Matrix is singular"));
         }
         if self.row_size() == 2 && self.column_size() == 2 {
-            let determinant = self.clone().determinant();
+            let determinant = self.determinant();
             let mut result = self.clone();
             result.positions[0][1] = -result.positions[0][1];
             result.positions[1][0] = -result.positions[1][0];
-            let tmp = result.clone().positions[0][0];
+            let tmp = result.positions[0][0];
             result.positions[0][0] = result.positions[1][1];
             result.positions[1][1] = tmp;
             result.scl(1. / determinant);
             return Ok(result);
         }
 
-        let identity_matrix = self.clone().identity_matrix();
+        let identity_matrix = self.identity_matrix();
         let mut augmented_matrix = self.clone();
         for (index, row) in identity_matrix.positions.iter().enumerate() {
             augmented_matrix.positions[index].extend(row.iter().cloned());

@@ -15,7 +15,7 @@ where
     if u.positions.is_empty() || v.positions.is_empty() {
         panic!("One the Vectors are 0");
     }
-    let dot_product: K = u.clone().dot(v.clone());
+    let dot_product: K = u.dot(v.clone());
     let u_norm = u.norm();
     let v_norm = v.norm();
 
