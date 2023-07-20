@@ -191,7 +191,7 @@ impl<
         K: PartialEq + Default + std::fmt::Display + std::ops::Neg<Output = K> + PartialOrd,
     {
         let zero: K = K::default();
-        let mut max: K = self.positions[row][column];
+        let mut max: K = K::default();
         let mut max_abs: K = if max < zero { -max } else { max };
         let mut max_row: usize = row;
 
@@ -227,7 +227,7 @@ impl<
         while column_index < row_echelon_form.column_size()
             && row_index < row_echelon_form.row_size()
         {
-            let (pivot, pivot_row) = row_echelon_form.clone().find_pivot(row_index, column_index);
+            let (pivot, pivot_row) = row_echelon_form.find_pivot(row_index, column_index);
 
             if pivot != zero {
                 for i in 0..row_echelon_form.column_size() {
@@ -240,18 +240,20 @@ impl<
                 row_echelon_form.positions.swap(row_index, pivot_row);
             }
 
-            let mut row_below_pivot_index = row_index + 1;
+            let mut row_below_pivot_index = 0;
 
             while row_below_pivot_index < row_echelon_form.row_size() {
-                let mut scaled_row: Vector<K> =
-                    Vector::from(&row_echelon_form.clone().positions[row_index]);
-                scaled_row.scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
+                if row_below_pivot_index != row_index {
+                    let mut scaled_row: Vector<K> =
+                        Vector::from(&row_echelon_form.clone().positions[row_index]);
+                    scaled_row.scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
 
-                let mut row_below_pivot =
-                    Vector::from(&row_echelon_form.clone().positions[row_below_pivot_index]);
-                row_below_pivot.sub(&scaled_row);
+                    let mut row_below_pivot =
+                        Vector::from(&row_echelon_form.clone().positions[row_below_pivot_index]);
+                    row_below_pivot.sub(&scaled_row);
 
-                row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
+                    row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
+                }
                 row_below_pivot_index += 1;
             }
             row_index += 1;
@@ -407,16 +409,15 @@ impl<
     {
         let rref = self.row_echelon();
         let mut rank_value: usize = 0;
-        let mut first = rref.positions[0][0];
 
         for (row_index, row) in rref.positions.iter().enumerate() {
+            let first = rref.positions[row_index][0];
             if !row
                 .iter()
                 .all(|&item| item == first && item == K::default())
             {
                 rank_value += 1;
             }
-            first = rref.positions[row_index][0];
         }
         rank_value
     }
@@ -425,16 +426,10 @@ impl<
 impl Matrix<f32> {
     fn identity_matrix(&mut self) -> Matrix<f32> {
         let mut result: Matrix<f32> = Matrix::from(&[]);
-        for (row_index, row) in self.positions.iter().enumerate() {
-            let mut result_row = vec![];
-            for (column_index, _column) in row.iter().enumerate() {
-                if column_index == row_index {
-                    result_row.push(1.);
-                } else {
-                    result_row.push(0.);
-                }
-            }
-            result.positions.push(result_row);
+        for i in 0..self.positions.len() {
+            let mut row = vec![0.0; self.positions.len()];
+            row[i] = 1.0;
+            result.positions.push(row);
         }
         result
     }
@@ -458,12 +453,13 @@ impl Matrix<f32> {
             result.scl(1. / determinant);
             return Ok(result);
         }
+
         let identity_matrix = self.clone().identity_matrix();
-        let mut result = self.clone();
+        let mut augmented_matrix = self.clone();
         for (index, row) in identity_matrix.positions.iter().enumerate() {
-            result.positions[index].extend(row.iter().cloned());
+            augmented_matrix.positions[index].extend(row.iter().cloned());
         }
-        let mut result = result.row_echelon();
+        let mut result = augmented_matrix.row_echelon();
         for index in 0..self.row_size() {
             result.positions[index].drain(0..self.column_size());
         }
@@ -690,7 +686,7 @@ mod tests {
     }
 
     #[test]
-    fn matrix_rref() {
+    fn matrix_rref_basics() {
         let mut u = Matrix::from(&[&[1, -1, 2], &[3, 2, 1], &[2, -3, -2]]);
         let result = u.row_echelon();
         assert_eq!(result.positions[0], Vec::from([1, 0, 0]));
@@ -705,13 +701,25 @@ mod tests {
 
         let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
         let result = u.row_echelon();
-        assert_eq!(result.positions[0], Vec::from([1, 1]));
+        assert_eq!(result.positions[0], Vec::from([1, 0]));
         assert_eq!(result.positions[1], Vec::from([0, 1]));
 
         let mut u = Matrix::from(&[&[1, 2], &[2, 4]]);
         let result = u.row_echelon();
         assert_eq!(result.positions[0], Vec::from([1, 2]));
         assert_eq!(result.positions[1], Vec::from([0, 0]));
+
+        let mut u = Matrix::from(&[&[1., 2., 3.], &[4., 5., 6.], &[7., 8., 9.]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1., 0., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 1., 0.]));
+        assert_eq!(result.positions[2], Vec::from([0., 0., 1.]));
+
+        let mut u = Matrix::from(&[&[8., 5., -2.], &[4., 7., 20.], &[7., 6., 1.]]);
+        let result = u.row_echelon();
+        assert_eq!(result.positions[0], Vec::from([1., 0., 0.]));
+        assert_eq!(result.positions[1], Vec::from([0., 1., 0.]));
+        assert_eq!(result.positions[2], Vec::from([0., 0., 1.]));
     }
 
     #[test]
@@ -960,22 +968,22 @@ mod tests {
             }
         }
 
-        // let mut u = Matrix::from(&[&[8., 5., -2.], &[4., 7., 20.], &[7., 6., 1.]]);
-        // let result = u.inverse();
-        // match result {
-        //     Ok(r) => {
-        //         println!("Matrix: {r}");
-        //         assert_eq!(r.positions[0], vec![0.649425287, 0.097701149, -0.655172414]);
-        //         assert_eq!(
-        //             r.positions[1],
-        //             vec![-0.781609195, -0.126436782, 0.965517241]
-        //         );
-        //         assert_eq!(r.positions[2], vec![0.143678161, 0.07471265, -0.206896552]);
-        //     }
-        //     Err(_) => {
-        //         assert_eq!(0, 1);
-        //     }
-        // }
+        let mut u = Matrix::from(&[&[8., 5., -2.], &[4., 7., 20.], &[7., 6., 1.]]);
+        let result = u.inverse();
+        match result {
+            Ok(r) => {
+                println!("Matrix: {r}");
+                assert_eq!(r.positions[0], vec![0.649425287, 0.097701149, -0.655172414]);
+                assert_eq!(
+                    r.positions[1],
+                    vec![-0.781609195, -0.126436782, 0.965517241]
+                );
+                assert_eq!(r.positions[2], vec![0.143678161, 0.07471265, -0.206896552]);
+            }
+            Err(_) => {
+                assert_eq!(0, 1);
+            }
+        }
     }
 
     #[test]
@@ -992,6 +1000,30 @@ mod tests {
             &[7., 6., 1.],
             &[21., 18., 7.],
         ]);
+        assert_eq!(u.rank(), 3);
+
+        let mut u = Matrix::from(&[&[0, 0], &[0, 0]]);
+        assert_eq!(u.rank(), 0);
+
+        let mut u = Matrix::from(&[&[1, 0], &[0, 1]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[&[2, 0], &[0, 2]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[&[1, 1], &[1, 1]]);
+        assert_eq!(u.rank(), 1);
+
+        let mut u = Matrix::from(&[&[0, 1], &[1, 0]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[&[-7, 5], &[4, 6]]);
+        assert_eq!(u.rank(), 2);
+
+        let mut u = Matrix::from(&[&[1, 0, 0], &[0, 1, 0], &[0, 0, 1]]);
         assert_eq!(u.rank(), 3);
     }
 }
