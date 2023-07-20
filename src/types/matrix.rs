@@ -259,7 +259,6 @@ impl<
             row_index += 1;
             column_index += 1;
         }
-        println!("{row_echelon_form}");
         row_echelon_form
     }
 
@@ -597,6 +596,24 @@ mod tests {
         let result = u.mul_vec(v);
         assert_eq!(result.positions[0], 4.);
         assert_eq!(result.positions[1], -4.);
+
+        let mut u = Matrix::from(&[&[0., 0.], &[0., 0.]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 0.);
+        assert_eq!(result.positions[1], 0.);
+
+        let mut u = Matrix::from(&[&[1., 1.], &[1., 1.]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 6.);
+        assert_eq!(result.positions[1], 6.);
+
+        let mut u = Matrix::from(&[&[0.5, 0.], &[0., 0.5]]);
+        let v = Vector::from(&[4., 2.]);
+        let result = u.mul_vec(v);
+        assert_eq!(result.positions[0], 2.);
+        assert_eq!(result.positions[1], 1.);
     }
 
     #[test]
@@ -630,12 +647,21 @@ mod tests {
     fn matrix_trace_with_zero() {
         let mut u = Matrix::from(&[&[1., 0.], &[0., 1.]]);
         assert_eq!(u.trace(), 2.0);
+
+        let mut u = Matrix::from(&[&[0., 0.], &[0., 0.]]);
+        assert_eq!(u.trace(), 0.0);
     }
 
     #[test]
     fn matrix_trace_positive() {
         let mut u = Matrix::from(&[&[2., -5., 0.], &[4., 3., 7.], &[-2., 3., 4.]]);
         assert_eq!(u.trace(), 9.0);
+
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.]]);
+        assert_eq!(u.trace(), 5.0);
+
+        let mut u = Matrix::from(&[&[8., -7.], &[4., 2.]]);
+        assert_eq!(u.trace(), 10.0);
     }
 
     #[test]
@@ -684,6 +710,11 @@ mod tests {
         assert_eq!(result.positions[0], Vec::from([1., 4.]));
         assert_eq!(result.positions[1], Vec::from([2., 5.]));
         assert_eq!(result.positions[2], Vec::from([3., 6.]));
+
+        let mut u = Matrix::from(&[&[1., 2.], &[3., 4.], &[5., 6.]]);
+        let result = u.transpose();
+        assert_eq!(result.positions[0], Vec::from([1., 3., 5.]));
+        assert_eq!(result.positions[1], Vec::from([2., 4., 6.]));
     }
 
     #[test]
@@ -945,7 +976,6 @@ mod tests {
         let result = u.inverse();
         match result {
             Ok(r) => {
-                println!("Matrix: {r}");
                 assert_eq!(r.positions[0], vec![1., 0., 0.]);
                 assert_eq!(r.positions[1], vec![0., 1., 0.]);
                 assert_eq!(r.positions[2], vec![0., 0., 1.]);
@@ -959,7 +989,6 @@ mod tests {
         let result = u.inverse();
         match result {
             Ok(r) => {
-                println!("Matrix: {r}");
                 assert_eq!(r.positions[0], vec![0.5, 0., 0.]);
                 assert_eq!(r.positions[1], vec![0., 0.5, 0.]);
                 assert_eq!(r.positions[2], vec![0., 0., 0.5]);
@@ -973,7 +1002,6 @@ mod tests {
         let result = u.inverse();
         match result {
             Ok(r) => {
-                println!("Matrix: {r}");
                 assert_eq!(r.positions[0], vec![0.649425287, 0.097701149, -0.655172414]);
                 assert_eq!(
                     r.positions[1],

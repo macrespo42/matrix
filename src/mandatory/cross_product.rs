@@ -17,14 +17,45 @@ mod tests {
     use super::*;
 
     #[test]
+    fn cross_product_null() {
+        let u = Vector::from(&[0., 0., 0.]);
+        let v = Vector::from(&[0., 0., 0.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([0., 0., 0.]));
+
+        let u = Vector::from(&[1., 0., 0.]);
+        let v = Vector::from(&[0., 0., 0.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([0., 0., 0.]));
+
+        let u = Vector::from(&[1., 1., 1.]);
+        let v = Vector::from(&[0., 0., 0.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([0., 0., 0.]));
+
+        let u = Vector::from(&[1., 1., 1.]);
+        let v = Vector::from(&[1., 1., 1.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([0., 0., 0.]));
+    }
+
+    #[test]
     fn cross_product_bool() {
         let u = Vector::from(&[0., 0., 1.]);
         let v = Vector::from(&[1., 0., 0.]);
         let res = cross_product(&u, &v);
 
-        assert_eq!(res.positions[0], 0.);
-        assert_eq!(res.positions[1], 1.);
-        assert_eq!(res.positions[2], 0.);
+        assert_eq!(res.positions, Vec::from([0., 1., 0.]));
+
+        let u = Vector::from(&[1., 0., 0.]);
+        let v = Vector::from(&[0., 1., 0.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([0., 0., 1.]));
     }
 
     #[test]
@@ -33,9 +64,13 @@ mod tests {
         let v = Vector::from(&[4., 5., 6.]);
         let res = cross_product(&u, &v);
 
-        assert_eq!(res.positions[0], -3.);
-        assert_eq!(res.positions[1], 6.);
-        assert_eq!(res.positions[2], -3.);
+        assert_eq!(res.positions, Vec::from([-3., 6., -3.]));
+
+        let u = Vector::from(&[8., 7., -4.]);
+        let v = Vector::from(&[3., 2., 1.]);
+        let res = cross_product(&u, &v);
+
+        assert_eq!(res.positions, Vec::from([15., -20., -5.]));
     }
 
     #[test]
@@ -44,8 +79,6 @@ mod tests {
         let v = Vector::from(&[-2., -5., 16.]);
         let res = cross_product(&u, &v);
 
-        assert_eq!(res.positions[0], 17.);
-        assert_eq!(res.positions[1], -58.);
-        assert_eq!(res.positions[2], -16.);
+        assert_eq!(res.positions, Vec::from([17., -58., -16.]));
     }
 }

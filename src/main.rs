@@ -10,7 +10,7 @@ use crate::types::{Matrix, Vector};
 fn main() {
     println!("Welcome to the matrix ! Choose the exercice you want to check 💊:");
     println!("Available :");
-    for n in 0..15 {
+    for n in 0..14 {
         if n < 10 {
             println!(" - Exercice 0{n}");
         } else {
@@ -185,14 +185,51 @@ fn main() {
             println!("\nExercise 12 - Inverse\n");
             println!("-------------------------------------");
             let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+            println!("inverse of : {u}");
+            println!("result:");
             match u.inverse() {
                 Ok(m) => {
-                    println!("{m:?}");
+                    println!("{m}");
                 }
                 Err(m) => {
-                    println!("{m:?}");
+                    println!("{m}");
                 }
             }
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[2., 0.], &[0., 2.]]);
+            println!("inverse of : {u}");
+            println!("result:");
+            match u.inverse() {
+                Ok(m) => {
+                    println!("{m}");
+                }
+                Err(m) => {
+                    println!("{m}");
+                }
+            }
+        }
+        13 => {
+            println!("\nExercise 13 - Rank\n");
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[
+                &[8., 5., -2.],
+                &[4., 7., 20.],
+                &[7., 6., 1.],
+                &[21., 18., 7.],
+            ]);
+
+            println!("rank of matrix: {u}");
+            println!("rank: {}", u.rank());
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1., 0., 0.], &[0., 1., 0.], &[0., 0., 1.]]);
+
+            println!("rank of matrix: {u}");
+            println!("rank: {}", u.rank());
+            println!("-------------------------------------");
+            let mut u = Matrix::from(&[&[1, 2], &[3, 4]]);
+
+            println!("rank of matrix: {u}");
+            println!("rank: {}", u.rank());
         }
         _ => println!("This exercice does not exist or are not implemented yet 🙄"),
     };
