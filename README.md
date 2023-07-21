@@ -1,5 +1,10 @@
 # Welcome to the matrix 😎💊
 
+![GitHub last commit](https://img.shields.io/github/last-commit/macrespo42/matrix)
+![GitHub stars](https://img.shields.io/github/stars/macrespo42/matrix)
+![GitHub forks](https://img.shields.io/github/forks/macrespo42/matrix)
+![License](https://img.shields.io/github/license/macrespo42/matrix)
+
 ## An introduction to Linear Algebra
 
 
