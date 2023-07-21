@@ -49,8 +49,6 @@ where
 #[cfg(test)]
 
 mod tests {
-    use std::assert_eq;
-
     use super::*;
 
     #[test]
