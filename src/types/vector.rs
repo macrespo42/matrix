@@ -1,4 +1,4 @@
-use std::{fmt, panic};
+use std::fmt;
 
 #[derive(Clone)]
 pub struct Vector<K> {
