@@ -25,25 +25,16 @@ where
         scaled_vectors.push(cpy);
     }
 
-    let mut linear_combination_result: Vec<K> = Vec::new();
+    let mut scaled_result: Vector<K> = u[0].clone();
+    scaled_result.scl(coefs[0]);
 
-    for column_index in 0..scaled_vectors[0].size() {
-        let mut computed_point: K = scaled_vectors[0].positions[0];
-        for (row_index, _row_value) in scaled_vectors.iter().enumerate() {
-            if row_index == 0 {
-                computed_point = scaled_vectors[row_index].positions[column_index];
-            } else {
-                computed_point = computed_point + scaled_vectors[row_index].positions[column_index];
-            }
-        }
-        linear_combination_result.push(computed_point);
+    for i in 1..u.len() {
+        let mut scaled_vector = u[i].clone();
+        scaled_vector.scl(coefs[i]);
+        scaled_result = scaled_result.clone().add(scaled_vector);
     }
 
-    let result: Vector<K> = Vector {
-        positions: linear_combination_result,
-    };
-
-    result
+    scaled_result
 }
 
 #[cfg(test)]

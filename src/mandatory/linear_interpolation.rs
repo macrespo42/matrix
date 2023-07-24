@@ -5,10 +5,7 @@ where
         + std::ops::Mul<f32, Output = V>
         + Clone,
 {
-    let mut result: V = v - u.clone();
-    result = result * t;
-    result = result + u;
-    result
+    u * (1. - t) + v * t
 }
 
 #[cfg(test)]

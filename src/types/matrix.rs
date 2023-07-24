@@ -188,7 +188,7 @@ impl<
 
     fn find_pivot(&mut self, row: usize, column: usize) -> (K, usize)
     where
-        K: PartialEq + Default + std::fmt::Display + std::ops::Neg<Output = K> + PartialOrd,
+        K: PartialEq + Default + std::ops::Neg<Output = K> + PartialOrd,
     {
         let zero: K = K::default();
         let mut max: K = K::default();
@@ -211,12 +211,7 @@ impl<
 
     pub fn row_echelon(&mut self) -> Matrix<K>
     where
-        K: Copy
-            + PartialEq
-            + Default
-            + std::ops::Div<Output = K>
-            + std::ops::Neg<Output = K>
-            + std::fmt::Display, // TODO delete after debugging
+        K: Copy + PartialEq + Default + std::ops::Div<Output = K> + std::ops::Neg<Output = K>,
     {
         let mut row_echelon_form: Matrix<K> = self.clone();
         let zero = K::default();
