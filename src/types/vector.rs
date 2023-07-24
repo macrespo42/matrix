@@ -169,7 +169,7 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
 
     fn abs(&self, val: K) -> f32 {
         if val.clone().into() < 0. {
-            return val.into() * -1.;
+            return -val.into();
         }
         val.into()
     }
