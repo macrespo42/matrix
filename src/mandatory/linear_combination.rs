@@ -83,5 +83,10 @@ mod tests {
         let v2 = Vector::from(&[1., 3., 5.]);
         let linear_combined = linear_combination::<f32>(&[v1, v2], &[1., -10.]);
         assert_eq!(linear_combined.positions, &[-52., 70., -119.5]);
+
+        let v1 = Vector::from(&[2., 3.]);
+        let v2 = Vector::from(&[4., 8.]);
+        let linear_combined = linear_combination::<f32>(&[v1, v2], &[4., 2.]);
+        assert_eq!(linear_combined.positions, &[16., 28.]);
     }
 }
