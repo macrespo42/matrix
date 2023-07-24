@@ -98,6 +98,9 @@ impl<
         if self.positions.len() != v.positions.len() {
             panic!("vectors must have the same size for dot product");
         }
+        if self.size() == 0 {
+            panic!("vector is empty");
+        }
         let mut result = self.positions[0] * v.positions[0];
         for i in 1..self.positions.len() {
             result = result + (self.positions[i] * v.positions[i])
@@ -108,6 +111,9 @@ impl<
 
 impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     pub fn norm_1(&self) -> f32 {
+        if self.positions.len() == 0 {
+            panic!("vector is empty");
+        }
         let mut result = self.abs(self.positions[0].clone());
         for index in 1..self.positions.len() {
             result += self.abs(self.positions[index].clone());
@@ -116,6 +122,9 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     }
 
     pub fn norm(&self) -> f32 {
+        if self.positions.len() == 0 {
+            panic!("vector is empty");
+        }
         let mut result: f32 = self.abs(self.positions[0].clone()).powf(2.);
         for index in 1..self.positions.len() {
             result += self.abs(self.positions[index].clone()).powf(2.);
