@@ -154,6 +154,9 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     }
 
     pub fn norm_inf(&self) -> f32 {
+        if self.positions.len() == 0 {
+            panic!("vector is empty");
+        }
         let mut result: f32 = self.abs(self.positions[0].clone());
         for index in 1..self.positions.len() {
             let elt: f32 = self.abs(self.positions[index].clone());
