@@ -57,7 +57,7 @@ impl<
     > Matrix<K>
 {
     fn column_size(&self) -> usize {
-        if self.positions.len() == 0 {
+        if self.positions.is_empty() {
             panic!("Empty matrix");
         }
         self.positions[0].len()

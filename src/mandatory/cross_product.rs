@@ -4,6 +4,9 @@ pub fn cross_product<K>(u: &Vector<K>, v: &Vector<K>) -> Vector<K>
 where
     K: Copy + std::ops::Mul<Output = K> + std::ops::Sub<Output = K> + std::ops::Add<Output = K>,
 {
+    if u.size() != 3 || v.size() != 3 {
+        panic!("Cross product can only be computed on vector of size 3");
+    }
     let x = u.positions[1] * v.positions[2] - u.positions[2] * v.positions[1];
     let y = u.positions[2] * v.positions[0] - u.positions[0] * v.positions[2];
     let z = u.positions[0] * v.positions[1] - u.positions[1] * v.positions[0];

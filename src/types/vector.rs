@@ -111,7 +111,7 @@ impl<
 
 impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     pub fn norm_1(&self) -> f32 {
-        if self.positions.len() == 0 {
+        if self.positions.is_empty() {
             panic!("vector is empty");
         }
         let mut result = self.abs(self.positions[0].clone());
@@ -122,7 +122,7 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     }
 
     pub fn norm(&self) -> f32 {
-        if self.positions.len() == 0 {
+        if self.positions.is_empty() {
             panic!("vector is empty");
         }
         let mut result: f32 = self.abs(self.positions[0].clone()).powf(2.);
@@ -154,7 +154,7 @@ impl<K: Clone + std::ops::Mul<K, Output = K> + Into<f32>> Vector<K> {
     }
 
     pub fn norm_inf(&self) -> f32 {
-        if self.positions.len() == 0 {
+        if self.positions.is_empty() {
             panic!("vector is empty");
         }
         let mut result: f32 = self.abs(self.positions[0].clone());
