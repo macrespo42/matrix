@@ -232,29 +232,31 @@ impl<
                     row_echelon_form.positions[pivot_row][i] =
                         row_echelon_form.positions[pivot_row][i] / pivot;
                 }
-            }
 
-            if pivot_row != row_index {
-                row_echelon_form.positions.swap(row_index, pivot_row);
-            }
-
-            let mut row_below_pivot_index = 0;
-
-            while row_below_pivot_index < row_echelon_form.row_size() {
-                if row_below_pivot_index != row_index {
-                    let mut scaled_row: Vector<K> =
-                        Vector::from(&row_echelon_form.positions[row_index]);
-                    scaled_row.scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
-
-                    let mut row_below_pivot =
-                        Vector::from(&row_echelon_form.positions[row_below_pivot_index]);
-                    row_below_pivot.sub(&scaled_row);
-
-                    row_echelon_form.positions[row_below_pivot_index] = row_below_pivot.positions;
+                if pivot_row != row_index {
+                    row_echelon_form.positions.swap(row_index, pivot_row);
                 }
-                row_below_pivot_index += 1;
+
+                let mut row_below_pivot_index = 0;
+
+                while row_below_pivot_index < row_echelon_form.row_size() {
+                    if row_below_pivot_index != row_index {
+                        let mut scaled_row: Vector<K> =
+                            Vector::from(&row_echelon_form.positions[row_index]);
+                        scaled_row
+                            .scl(row_echelon_form.positions[row_below_pivot_index][column_index]);
+
+                        let mut row_below_pivot =
+                            Vector::from(&row_echelon_form.positions[row_below_pivot_index]);
+                        row_below_pivot.sub(&scaled_row);
+
+                        row_echelon_form.positions[row_below_pivot_index] =
+                            row_below_pivot.positions;
+                    }
+                    row_below_pivot_index += 1;
+                }
+                row_index += 1;
             }
-            row_index += 1;
             column_index += 1;
         }
         row_echelon_form
